@@ -14,16 +14,30 @@ func Load() {
 	}
 
 	AppSetting = &App{
-		Url: loadEnv("APP_URL", "http://localhost:8080"),
+		Url: loadEnv("APP_URL", "localhost:8080"),
 		Env: loadEnv("APP_ENV", "debug"),
 	}
 
-	DatabaseSetting = &Database{
+	WDbSetting = &Database{
 		Host:     loadEnv("DB_HOST", "127.0.0.1"),
 		Port:     loadEnv("DB_PORT", 3306),
 		Name:     loadEnv("DB_DATABASE", "ginExample"),
 		UserName: loadEnv("DB_USERNAME", "root"),
 		Password: loadEnv("DB_PASSWORD", ""),
+	}
+
+	RDbSetting = &Database{
+		Host:     loadEnv("DB_READONLY_HOST", WDbSetting.Host),
+		Port:     loadEnv("DB_READONLY_PORT", WDbSetting.Port),
+		Name:     loadEnv("DB_READONLY_DATABASE", WDbSetting.Name),
+		UserName: loadEnv("DB_READONLY_USERNAME", WDbSetting.UserName),
+		Password: loadEnv("DB_READONLY_PASSWORD", WDbSetting.Password),
+	}
+
+	RedisSetting = &Redis{
+		Host:     loadEnv("REDIS_HOST", "127.0.0.1"),
+		Port:     loadEnv("REDIS_PORT", 6379),
+		Password: loadEnv("REDIS_PASSWORD", ""),
 	}
 }
 

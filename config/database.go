@@ -8,4 +8,5 @@ type Database struct {
 	Password string
 }
 
-var DatabaseSetting *Database
+var RDbSetting *Database
+var WDbSetting *Database
