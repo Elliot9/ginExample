@@ -1,10 +1,11 @@
-package router
+package loader
 
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github/elliot9/ginExample/repository/mysql"
-	"github/elliot9/ginExample/repository/redis"
+	"github/elliot9/ginExample/internal/repository/mysql"
+	"github/elliot9/ginExample/internal/repository/redis"
+	"log"
 )
 
 type Server struct {
@@ -28,6 +29,7 @@ func NewHTTPServer() (*Server, error) {
 		// todo change to log
 		fmt.Println(err)
 	}
+	log.Println("[info] DB connection")
 
 	// 初始化 Redis
 	redisRepo, err := redis.New()
@@ -35,6 +37,7 @@ func NewHTTPServer() (*Server, error) {
 		// todo change to log
 		fmt.Println(err)
 	}
+	log.Println("[info] Redis connection")
 
 	return &Server{
 		Mux:   mux,

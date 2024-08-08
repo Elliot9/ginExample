@@ -1,10 +1,15 @@
 package main
 
 import (
+	"context"
+	"errors"
 	"github/elliot9/ginExample/config"
-	"github/elliot9/ginExample/router"
+	"github/elliot9/ginExample/internal/loader"
+	"github/elliot9/ginExample/pkg/shutdown"
 	"log"
 	"net/http"
+	"syscall"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,16 +20,16 @@ func init() {
 
 func main() {
 	gin.SetMode(config.AppSetting.Env)
-	s, err := router.NewHTTPServer()
+	s, err := loader.NewHTTPServer()
 
 	if err != nil {
 		panic(err)
 	}
 
 	defer func() {
-		_ = s.Db.DbWClose()
-		_ = s.Db.DbRClose()
-		_ = s.Cache.Close()
+		//_ = s.Db.DbWClose()
+		//_ = s.Db.DbRClose()
+		//_ = s.Cache.Close()
 	}()
 
 	server := &http.Server{
@@ -32,6 +37,38 @@ func main() {
 		Handler: s.Mux,
 	}
 
-	log.Printf("[info] start http server listening %s", config.AppSetting.Url)
-	_ = server.ListenAndServe()
+	go func() {
+		log.Printf("[info] Http Server start listening %s\n", config.AppSetting.Url)
+		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			log.Fatalf("HTTP server startup error: %v", err)
+		}
+		log.Println("[info] Stopped serving new connections.")
+	}()
+
+	shutdown.New(syscall.SIGINT, syscall.SIGTERM).OnShutdown(func() {
+		// 關閉 Http Server
+		shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
+		defer shutdownRelease()
+
+		if err := server.Shutdown(shutdownCtx); err != nil {
+			log.Fatalf("HTTP shutdown error: %v", err)
+		}
+		log.Println("[info] Http Server shutdown complete.")
+	}, func() {
+		// 關閉 DB connection
+		if s.Db.GetDbR() != nil {
+			_ = s.Db.DbRClose()
+		}
+
+		if s.Db.GetDbW() != nil {
+			_ = s.Db.DbWClose()
+		}
+		log.Println("[info] DB shutdown complete.")
+	}, func() {
+		// 關閉 Redis connection
+		if s.Cache != nil {
+			_ = s.Cache.Close()
+			log.Println("[info] Redis shutdown complete.")
+		}
+	})
 }

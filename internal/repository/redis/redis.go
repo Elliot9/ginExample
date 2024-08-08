@@ -20,7 +20,6 @@ type cacheRepo struct {
 
 func New() (Repo, error) {
 	client, err := redisConnect()
-
 	if err != nil {
 		return nil, err
 	}
@@ -60,6 +59,5 @@ func (c cacheRepo) Del(ctx context.Context, key string) bool {
 }
 
 func (c cacheRepo) Close() error {
-	//TODO implement me
-	panic("implement me")
+	return c.client.Close()
 }
