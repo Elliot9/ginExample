@@ -2,10 +2,12 @@ package loader
 
 import (
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"github/elliot9/ginExample/internal/repository/mysql"
 	"github/elliot9/ginExample/internal/repository/redis"
+	"github/elliot9/ginExample/internal/router"
 	"log"
+
+	"github.com/gin-gonic/gin"
 )
 
 type Server struct {
@@ -16,12 +18,6 @@ type Server struct {
 
 func NewHTTPServer() (*Server, error) {
 	mux := gin.New()
-	mux.GET("/health", func(ctx *gin.Context) {
-		ctx.JSON(200, map[string]interface{}{
-			"status": true,
-			"from":   "Elliot",
-		})
-	})
 
 	// 初始化 MYSQL
 	dbRepo, err := mysql.New()
@@ -38,6 +34,9 @@ func NewHTTPServer() (*Server, error) {
 		fmt.Println(err)
 	}
 	log.Println("[info] Redis connection")
+
+	// 註冊 Router
+	router.RegisterRouter(mux, dbRepo, redisRepo)
 
 	return &Server{
 		Mux:   mux,
