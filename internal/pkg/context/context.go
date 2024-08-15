@@ -5,6 +5,7 @@ import (
 	"net/url"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
 )
 
 type Context interface {
@@ -13,6 +14,19 @@ type Context interface {
 	URI() string
 	JSON(code int, messages any)
 	HTML(name string, obj any)
+	Redirect(code int, location string)
+	Abort(code int, err error)
+	// 反序列化	queryString
+	ShouldBindQuery(obj any) error
+	// 反序列化 PostForm
+	// tags: `form:"id"`
+	ShouldBindForm(obj any) error
+	// 反序列化 Path Params (ex. /user/:id)
+	// tags: `uri: "id"`
+	ShouldBindURI(obj any) error
+	// 反序列化 PostJson
+	// tags: `json:"id"`
+	ShouldBindJson(obj any) error
 }
 
 type HandlerFunc func(c Context)
@@ -45,4 +59,28 @@ func (c *context) JSON(code int, messages any) {
 
 func (c *context) HTML(name string, obj any) {
 	c.ctx.HTML(http.StatusOK, name, obj)
+}
+
+func (c *context) Redirect(code int, location string) {
+	c.ctx.Redirect(code, location)
+}
+
+func (c *context) Abort(code int, err error) {
+	c.ctx.AbortWithError(code, err)
+}
+
+func (c *context) ShouldBindQuery(obj any) error {
+	return c.ctx.ShouldBindQuery(obj)
+}
+
+func (c *context) ShouldBindForm(obj any) error {
+	return c.ctx.ShouldBindWith(obj, binding.FormPost)
+}
+
+func (c *context) ShouldBindURI(obj any) error {
+	return c.ctx.ShouldBindUri(obj)
+}
+
+func (c *context) ShouldBindJson(obj any) error {
+	return c.ctx.ShouldBindBodyWithJSON(obj)
 }

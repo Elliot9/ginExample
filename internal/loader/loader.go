@@ -8,12 +8,14 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type Server struct {
-	Mux   *gin.Engine
-	Db    mysql.Repo
-	Cache redis.Repo
+	Mux       *gin.Engine
+	Validator *validator.Validate
+	Db        mysql.Repo
+	Cache     redis.Repo
 }
 
 func NewHTTPServer() (*Server, error) {
@@ -35,12 +37,16 @@ func NewHTTPServer() (*Server, error) {
 	}
 	log.Println("[info] Redis connection")
 
+	// 初始化 Validator
+	validator := validator.New()
+
 	// 註冊 Router
-	router.RegisterRouter(mux, dbRepo, redisRepo)
+	router.RegisterRouter(mux, dbRepo, redisRepo, validator)
 
 	return &Server{
-		Mux:   mux,
-		Db:    dbRepo,
-		Cache: redisRepo,
+		Mux:       mux,
+		Validator: validator,
+		Db:        dbRepo,
+		Cache:     redisRepo,
 	}, nil
 }

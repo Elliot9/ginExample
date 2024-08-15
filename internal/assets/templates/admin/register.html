@@ -1,10 +1,10 @@
-{{ define "admin/login.html" }}
+{{ define "admin/register.html" }}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理員登入</title>
+    <title>註冊頁面</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,7 +33,7 @@
         button {
             width: 100%;
             padding: 10px;
-            background-color: #007bff;
+            background-color: #4CAF50;
             color: white;
             border: none;
             border-radius: 4px;
@@ -41,29 +41,30 @@
             font-size: 16px;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #45a049;
         }
-        .register-link {
+        .login-link {
             text-align: center;
             margin-top: 1rem;
         }
-        .register-link a {
-            color: #007bff;
+        .login-link a {
+            color: #45a049;
             text-decoration: none;
             font-weight: bold;
         }
-        .register-link a:hover {
+        .login-link a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <form action="/api/admin/login" method="post">
-        <input type="text" class="form-control" name="username" placeholder="電子郵件">
+    <form action="/api/admin/register" method="post">
+        <input type="text" class="form-control" name="name" placeholder="姓名">
+        <input type="text" class="form-control" name="email" placeholder="電子郵件">
         <input type="password" class="form-control" name="password" placeholder="密碼">
-        <button class="btn btn-block btn-primary" id="btnOk" type="submit">登入</button>
-        <div class="register-link">
-            <a href="/admin/register">還沒有帳號？立即註冊</a>
+        <button class="btn btn-block btn-primary" id="btnOk" type="submit">註冊</button>
+        <div class="login-link">
+            <a href="/admin/login">立即登入</a>
         </div>
     </form>
 </body>

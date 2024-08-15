@@ -6,15 +6,17 @@ import (
 	"github/elliot9/ginExample/internal/repository/redis"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
 
 type resource struct {
-	mux    *gin.Engine
-	db     mysql.Repo
-	cache  redis.Repo
-	logger *zap.Logger
+	mux       *gin.Engine
+	db        mysql.Repo
+	cache     redis.Repo
+	logger    *zap.Logger
+	validator *validator.Validate
 }
 
 var _ routerRegister = (router)(nil)
@@ -29,12 +31,13 @@ func (ro router) register(r *resource) {
 	ro(r)
 }
 
-func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo) {
+func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator *validator.Validate) {
 	r := &resource{
-		mux:    mux,
-		db:     db,
-		cache:  cache,
-		logger: zap.New(zapcore.NewNopCore()),
+		mux:       mux,
+		db:        db,
+		cache:     cache,
+		logger:    zap.New(zapcore.NewNopCore()),
+		validator: validator,
 	}
 
 	// fetch templates

@@ -5,13 +5,6 @@ import (
 	"time"
 )
 
-type Handler interface {
-	Ping() context.HandlerFunc
-}
-
-type handler struct {
-}
-
 func (h *handler) Ping() context.HandlerFunc {
 	return func(c context.Context) {
 		resp := &struct {
@@ -28,8 +21,4 @@ func (h *handler) Ping() context.HandlerFunc {
 
 		c.JSON(200, resp)
 	}
-}
-
-func New() *handler {
-	return &handler{}
 }

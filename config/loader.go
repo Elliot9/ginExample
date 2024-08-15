@@ -2,13 +2,20 @@ package config
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"os"
 	"strconv"
+
+	"github.com/joho/godotenv"
 )
 
-func Load() {
-	err := godotenv.Load()
+func Load(fileName ...string) {
+	var err error
+	if len(fileName) == 0 {
+		err = godotenv.Load()
+	} else {
+		err = godotenv.Load(fileName...)
+	}
+
 	if err != nil {
 		fmt.Printf("config 加載 .env 時發生錯誤: %v\n", err)
 	}
