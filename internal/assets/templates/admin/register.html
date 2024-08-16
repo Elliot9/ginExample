@@ -22,13 +22,24 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             width: 300px;
         }
+        .form-group {
+            margin-bottom: 1rem;
+        }
         input {
             width: 100%;
             padding: 10px;
-            margin-bottom: 1rem;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
+        }
+        .alert {
+            color: #721c24;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
         }
         button {
             width: 100%;
@@ -59,9 +70,30 @@
 </head>
 <body>
     <form action="/admin/register" method="post">
-        <input type="text" class="form-control" name="name" placeholder="姓名">
-        <input type="text" class="form-control" name="email" placeholder="電子郵件">
-        <input type="password" class="form-control" name="password" placeholder="密碼">
+        <div class="form-group">
+            <input type="text" class="form-control" name="name" placeholder="姓名">
+            {{ if .messages.Name }}
+                <div class="alert">
+                    {{ .messages.Name }}
+                </div>
+            {{ end }}
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" name="email" placeholder="電子郵件">
+            {{ if .messages.Account }}
+                <div class="alert">
+                    {{ .messages.Account }}
+                </div>
+            {{ end }}
+        </div>
+        <div class="form-group">
+            <input type="password" class="form-control" name="password" placeholder="密碼">
+            {{ if .messages.Password }}
+                <div class="alert">
+                    {{ .messages.Password }}
+                </div>
+            {{ end }}
+        </div>
         <button class="btn btn-block btn-primary" id="btnOk" type="submit">註冊</button>
         <div class="login-link">
             <a href="/admin/login">立即登入</a>

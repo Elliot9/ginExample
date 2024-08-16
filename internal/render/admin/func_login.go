@@ -5,6 +5,8 @@ import (
 	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type loginReqeust struct {
@@ -17,13 +19,20 @@ func (h *handler) Login() context.HandlerFunc {
 		req := new(loginReqeust)
 
 		if err := c.ShouldBindForm(req); err != nil {
-			c.Abort(context.Error(http.StatusBadRequest, 100, err.Error()))
+			errors := make(map[string]any)
+			for _, fieldErr := range err.(validator.ValidationErrors) {
+				errors[fieldErr.Field()] = fieldErr.ActualTag()
+			}
+
+			c.ReturnBackWith(errors)
 			return
 		}
 
 		admin, err := h.service.Login(req.Account, req.Password)
 		if err != nil {
-			c.Abort(context.Error(http.StatusBadRequest, 100, err.Error()))
+			c.ReturnBackWith(map[string]any{
+				"Password": err.Error(),
+			})
 			return
 		}
 

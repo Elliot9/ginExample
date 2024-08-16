@@ -6,7 +6,8 @@ import (
 	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
-	// "github.com/go-playground/validator/v10"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type registerReqeust struct {
@@ -18,10 +19,13 @@ type registerReqeust struct {
 func (h *handler) Register() context.HandlerFunc {
 	return func(c context.Context) {
 		req := new(registerReqeust)
-
 		if err := c.ShouldBindForm(req); err != nil {
-			fmt.Println(err)
-			c.Abort(context.Error(http.StatusBadRequest, 100, err.Error()))
+			errors := make(map[string]any)
+			for _, fieldErr := range err.(validator.ValidationErrors) {
+				errors[fieldErr.Field()] = fieldErr.ActualTag()
+			}
+
+			c.ReturnBackWith(errors)
 			return
 		}
 

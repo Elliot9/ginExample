@@ -22,6 +22,7 @@ type Context interface {
 	Redirect(code int, location string)
 	Abort(CustomError)
 	GetAbort() CustomError
+	ReturnBackWith(messages map[string]any)
 	// 反序列化	queryString
 	ShouldBindQuery(obj any) error
 	// 反序列化 PostForm
@@ -35,6 +36,7 @@ type Context interface {
 	ShouldBindJson(obj any) error
 	ResponseWriter() gin.ResponseWriter
 	Session() sessions.Session
+	GetFlash() (map[string]any, bool)
 }
 
 type HandlerFunc func(c Context)
@@ -104,6 +106,17 @@ func (c *context) GetAbort() (err CustomError) {
 	return value.(CustomError)
 }
 
+func (c *context) ReturnBackWith(messages map[string]any) {
+	referer := c.Header().Get("Referer")
+	if referer == "" {
+		referer = "/"
+	}
+
+	c.Session().AddFlash(messages)
+	c.Session().Save()
+	c.Redirect(http.StatusFound, referer)
+}
+
 func (c *context) ShouldBindQuery(obj any) error {
 	return c.ctx.ShouldBindQuery(obj)
 }
@@ -125,4 +138,29 @@ func (c *context) ResponseWriter() gin.ResponseWriter {
 
 func (c *context) Session() sessions.Session {
 	return c.session
+}
+
+func (c *context) GetFlash() (map[string]any, bool) {
+	result := c.Session().Flashes()
+
+	c.Session().Delete("_flash")
+	c.Session().Save()
+
+	if len(result) == 0 {
+		return make(map[string]any), false
+	}
+
+	flashMap := make(map[string]any)
+	for _, v := range result {
+		if m, ok := v.(map[string]any); ok {
+			flashMap = m
+			break
+		}
+	}
+
+	if len(flashMap) == 0 {
+		return make(map[string]any), false
+	}
+
+	return flashMap, true
 }
