@@ -1,0 +1,51 @@
+{{ define "errors/401.html" }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>401 - 未授權訪問</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .error-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #e74c3c;
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        p {
+            color: #333;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .back-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>401</h1>
+        <p>抱歉,您沒有權限訪問此頁面。</p>
+        <p>請確保您已登錄或擁有適當的訪問權限。</p>
+        <a href="/" class="back-link">返回首頁</a>
+    </div>
+</body>
+</html>
+{{ end }}

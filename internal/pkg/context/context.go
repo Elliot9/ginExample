@@ -4,18 +4,24 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 )
 
+const AbortErrorName = "_abort_error_"
+const SessionAuthKey = "user"
+
 type Context interface {
+	Header() http.Header
 	Method() string
 	Host() string
 	URI() string
 	JSON(code int, messages any)
 	HTML(name string, obj any)
 	Redirect(code int, location string)
-	Abort(code int, err error)
+	Abort(CustomError)
+	GetAbort() CustomError
 	// 反序列化	queryString
 	ShouldBindQuery(obj any) error
 	// 反序列化 PostForm
@@ -27,17 +33,37 @@ type Context interface {
 	// 反序列化 PostJson
 	// tags: `json:"id"`
 	ShouldBindJson(obj any) error
+	ResponseWriter() gin.ResponseWriter
+	Session() sessions.Session
 }
 
 type HandlerFunc func(c Context)
 
 // Wrapper
 func NewContext(ctx *gin.Context) Context {
-	return &context{ctx: ctx}
+	session := sessions.Default(ctx)
+	return &context{
+		ctx:     ctx,
+		session: session,
+	}
 }
 
 type context struct {
-	ctx *gin.Context
+	ctx     *gin.Context
+	session sessions.Session
+}
+
+func (c *context) Header() http.Header {
+	header := c.ctx.Request.Header
+
+	clone := make(http.Header, len(header))
+	for k, v := range header {
+		value := make([]string, len(v))
+		copy(value, v)
+
+		clone[k] = value
+	}
+	return clone
 }
 
 func (c *context) Method() string {
@@ -65,8 +91,17 @@ func (c *context) Redirect(code int, location string) {
 	c.ctx.Redirect(code, location)
 }
 
-func (c *context) Abort(code int, err error) {
-	c.ctx.AbortWithError(code, err)
+func (c *context) Abort(err CustomError) {
+	c.ctx.Set(AbortErrorName, err)
+	c.ctx.AbortWithStatus(err.HTTPCode())
+}
+
+func (c *context) GetAbort() (err CustomError) {
+	value, exists := c.ctx.Get(AbortErrorName)
+	if !exists {
+		return nil
+	}
+	return value.(CustomError)
 }
 
 func (c *context) ShouldBindQuery(obj any) error {
@@ -83,4 +118,11 @@ func (c *context) ShouldBindURI(obj any) error {
 
 func (c *context) ShouldBindJson(obj any) error {
 	return c.ctx.ShouldBindBodyWithJSON(obj)
+}
+func (c *context) ResponseWriter() gin.ResponseWriter {
+	return c.ctx.Writer
+}
+
+func (c *context) Session() sessions.Session {
+	return c.session
 }

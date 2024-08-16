@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/gob"
 	"errors"
 	"github/elliot9/ginExample/config"
 	"github/elliot9/ginExample/internal/loader"
@@ -15,6 +16,8 @@ import (
 )
 
 func init() {
+	// 註冊序列化類型
+	gob.Register(map[string]interface{}{})
 	config.Load()
 }
 

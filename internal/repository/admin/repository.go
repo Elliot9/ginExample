@@ -4,14 +4,12 @@ import (
 	"errors"
 	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/repository/mysql"
-
-	"gorm.io/gorm"
 )
 
 type AdminRepo interface {
 	Create(newAdmin *models.Admin) (id int, err error)
 	Exists(email string) bool
-	//Find(email, password string) (*models.Admin, error)
+	FindByEmail(email string) *models.Admin
 }
 
 type adminRepo struct {
@@ -37,8 +35,16 @@ func (repo *adminRepo) Create(newAdmin *models.Admin) (id int, err error) {
 }
 
 func (repo *adminRepo) Exists(email string) bool {
-	var admin models.Admin
+	return repo.FindByEmail(email) != nil
+}
 
+func (repo *adminRepo) FindByEmail(email string) *models.Admin {
+	var admin models.Admin
 	result := repo.db.GetDbR().Where("email = ?", email).First(&admin)
-	return !errors.Is(result.Error, gorm.ErrRecordNotFound)
+
+	if result.Error != nil {
+		return nil
+	}
+
+	return &admin
 }

@@ -3,9 +3,9 @@ package admin
 import (
 	//"errors"
 	"fmt"
+	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
-	"strconv"
 	// "github.com/go-playground/validator/v10"
 )
 
@@ -21,18 +21,24 @@ func (h *handler) Register() context.HandlerFunc {
 
 		if err := c.ShouldBindForm(req); err != nil {
 			fmt.Println(err)
-			c.Abort(http.StatusBadRequest, err)
+			c.Abort(context.Error(http.StatusBadRequest, 100, err.Error()))
 			return
 		}
 
 		id, err := h.service.Register(req.Name, req.Account, req.Password)
 		if err != nil {
-			c.Abort(http.StatusBadRequest, err)
+			c.Abort(context.Error(http.StatusBadRequest, 100, err.Error()))
 			return
 		}
 
-		c.JSON(200, map[string]string{
-			"id": strconv.Itoa(id),
-		})
+		admin := &models.Admin{Model: models.Model{ID: uint(id)}, Name: req.Name, Email: req.Account}
+
+		if err := storeAuthSession(c, admin); err != nil {
+			fmt.Println(err)
+			c.Abort(context.Error(http.StatusInternalServerError, 500, "儲存 Session Error"))
+			return
+		}
+
+		c.Redirect(http.StatusFound, "/admin")
 	}
 }

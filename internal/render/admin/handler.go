@@ -11,6 +11,8 @@ import (
 )
 
 type Handler interface {
+	LoginPage() context.HandlerFunc
+	RegisterPage() context.HandlerFunc
 	Register() context.HandlerFunc
 	Login() context.HandlerFunc
 	Logout() context.HandlerFunc
