@@ -1,0 +1,95 @@
+{{ define "article/create" }}
+{{ template "layout" . }}
+{{ end }}
+
+{{ define "head" }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{{ end }}
+
+{{ define "content" }}
+<div class="container mx-auto px-4 max-w-4xl">
+    <form id="articleForm" class="bg-white shadow-lg rounded-lg p-8">
+        <div class="mb-6">
+            <label for="title" class="block text-gray-700 text-sm font-bold mb-2">文章標題</label>
+            <input type="text" id="title" name="title" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+        </div>
+        
+        <div class="mb-6">
+            <label for="content" class="block text-gray-700 text-sm font-bold mb-2">文章內容</label>
+            <textarea id="content" name="content" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="10"></textarea>
+        </div>
+        
+        <div class="mb-6">
+            <label for="publishDate" class="block text-gray-700 text-sm font-bold mb-2">發佈時間</label>
+            <div class="relative">
+                <input type="text" id="publishDate" name="publishDate" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <i class="fas fa-calendar-alt text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mb-8">
+            <label for="tags" class="block text-gray-700 text-sm font-bold mb-2">標籤</label>
+            <input type="text" id="tags" name="tags" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="輸入標籤，用逗號分隔">
+        </div>
+        
+        <div class="flex flex-col sm:flex-row items-center justify-end space-y-3 sm:space-y-0 sm:space-x-4">
+            <button type="button" id="cancelButton" class="w-full sm:w-auto bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50">
+                <i class="fas fa-times mr-2"></i>取消
+            </button>
+            <button type="button" id="saveButton" class="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                <i class="fas fa-save mr-2"></i>暫存
+            </button>
+            <button type="submit" class="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                <i class="fas fa-paper-plane mr-2"></i>發佈
+            </button>
+        </div>
+    </form>
+</div>
+{{end}}
+
+{{ define "scripts" }}
+<script>
+    // 初始化 EasyMDE (Markdown 編輯器)
+    var easyMDE = new EasyMDE({
+        element: document.getElementById('content'),
+        spellChecker: false,
+        autosave: {
+            enabled: true,
+            uniqueId: "articleContent",
+            delay: 1000,
+        },
+    });
+
+    // 初始化 Flatpickr (日期選擇器)
+    flatpickr("#publishDate", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+    });
+
+    // 暫存功能
+    document.getElementById('saveButton').addEventListener('click', function() {
+        // 這裡實現暫存邏輯
+        alert('文章已暫存');
+    });
+
+    // 取消功能
+    document.getElementById('cancelButton').addEventListener('click', function() {
+        if (confirm('確定要取消嗎？所有未保存的更改將丟失。')) {
+            window.location.href = '/admin/articles'; // 假設這是文章列表頁面
+        }
+    });
+
+    // 表單提交
+    document.getElementById('articleForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // 這裡實現發佈邏輯
+        alert('文章已發佈');
+    });
+</script>
+{{ end }}

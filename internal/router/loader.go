@@ -47,7 +47,6 @@ func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator 
 	}
 
 	r.mux.StaticFS("/assets", http.Dir("internal/assets"))
-	// fetch templates
 	r.mux.LoadHTMLGlob("internal/assets/templates/**/*")
 
 	// global middlewares

@@ -1,0 +1,112 @@
+{{ define "layout" }}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <style>
+        .theme-light {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+        }
+        .theme-dark {
+            --bg-primary: #1f2937;
+            --bg-secondary: #111827;
+            --text-primary: #f9fafb;
+            --text-secondary: #d1d5db;
+        }
+        .theme-blue {
+            --bg-primary: #1e3a8a;
+            --bg-secondary: #1e40af;
+            --text-primary: #ffffff;
+            --text-secondary: #bfdbfe;
+        }
+    </style>
+    {{ block "head" . }}{{ end }}
+</head>
+<body class="theme-light bg-gray-100 h-screen flex overflow-hidden">
+   <!-- Sidebar -->
+   <aside class="w-64 h-screen bg-gray-800 text-white flex flex-col">
+    <div class="p-4">
+        <h1 class="text-2xl font-bold">Dashboard</h1>
+    </div>
+    <nav class="flex-grow">
+        <a href="/admin" class="block py-2 px-4 hover:bg-gray-700"><i class="fas fa-home mr-2"></i>首頁</a>
+        <a href="/admin/article/create" class="block py-2 px-4 hover:bg-gray-700"><i class="fas fa-book mr-2"></i>文章管理</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700"><i class="fas fa-chart-bar mr-2"></i>統計</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700"><i class="fas fa-users mr-2"></i>用戶</a>
+        <a href="#" class="block py-2 px-4 hover:bg-gray-700"><i class="fas fa-cog mr-2"></i>設置</a>
+    </nav>
+    <div class="p-4 border-t border-gray-700">
+        <div class="flex items-center mb-4">
+            <img src="https://via.placeholder.com/40" alt="User" class="w-10 h-10 rounded-full mr-3">
+            <div>
+                <p class="font-semibold">{{ .admin.Name }}</p>
+                <p class="text-sm text-gray-400">管理員</p>
+            </div>
+        </div>
+        <button id="logoutBtn" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded">
+            <i class="fas fa-sign-out-alt mr-2"></i>登出
+        </button>
+    </div>
+    </aside>
+
+     <!-- Main Content -->
+     <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Top bar -->
+        <header class="bg-white shadow-md p-4 flex justify-between items-center">
+            <h2 class="text-xl font-semibold">歡迎回來，{{ .admin.Name }}</h2>
+            <div class="flex items-center">
+                <button id="themeToggle" class="mr-4 text-gray-600 hover:text-gray-800">
+                    <i class="fas fa-adjust"></i>
+                </button>
+                <div class="relative">
+                    <button class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-bell"></i>
+                    </button>
+                    <span class="absolute top-0 right-0 -mt-1 -mr-1 bg-red-500 text-white rounded-full w-4 h-4 text-xs flex items-center justify-center">3</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content area -->
+        <div class="flex-1 overflow-y-auto p-6 bg-gray-100">
+            {{ block "content" . }}{{ end }}
+        </main>
+
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        const themes = ['theme-light', 'theme-dark', 'theme-blue'];
+        let currentTheme = 0;
+
+        themeToggle.addEventListener('click', () => {
+            body.classList.remove(themes[currentTheme]);
+            currentTheme = (currentTheme + 1) % themes.length;
+            body.classList.add(themes[currentTheme]);
+        });
+
+        $("#logoutBtn").on('click', function () {
+            $.ajax({
+                url: "/admin/logout",
+                type: "GET",
+                data: "",
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+                },
+                success: function () {
+                    window.location.href = "/admin/login"
+                }
+            });
+        })
+    </script>
+    {{ block "scripts" . }}{{ end }}
+</body>
+</html>
+{{ end }}

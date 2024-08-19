@@ -39,7 +39,7 @@ func (h *handler) Register() context.HandlerFunc {
 
 		if err := storeAuthSession(c, admin); err != nil {
 			fmt.Println(err)
-			c.Abort(context.Error(http.StatusInternalServerError, 500, "儲存 Session Error"))
+			c.Abort(context.Error(http.StatusInternalServerError, 500, "Store Session Error"))
 			return
 		}
 

@@ -38,7 +38,7 @@ func (h *handler) Login() context.HandlerFunc {
 
 		if err := storeAuthSession(c, admin); err != nil {
 			fmt.Println(err)
-			c.Abort(context.Error(http.StatusInternalServerError, 500, "儲存 Session Error"))
+			c.Abort(context.Error(http.StatusInternalServerError, 500, "Store Session Error"))
 			return
 		}
 
@@ -47,11 +47,7 @@ func (h *handler) Login() context.HandlerFunc {
 }
 
 func storeAuthSession(c context.Context, admin *models.Admin) error {
-	c.Session().Set(context.SessionAuthKey, map[string]any{
-		"Name":  admin.Name,
-		"Email": admin.Email,
-		"ID":    admin.ID,
-	})
+	c.Session().Set(context.SessionAuthKey, &admin)
 
 	if err := c.Session().Save(); err != nil {
 		return err

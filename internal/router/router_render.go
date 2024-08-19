@@ -3,6 +3,7 @@ package router
 import (
 	"github/elliot9/ginExample/internal/middleware"
 	"github/elliot9/ginExample/internal/render/admin"
+	"github/elliot9/ginExample/internal/render/article"
 	"github/elliot9/ginExample/internal/render/dashboard"
 )
 
@@ -21,6 +22,10 @@ var renderApi = router(func(r *resource) {
 		authOnlyGroup := api.Group("", middleware.AdaptMiddleware(r.middleware.Auth()))
 		authOnlyGroup.GET("/logout", wrapHandler(admin.Logout()))
 		authOnlyGroup.GET("", wrapHandler(dashboard.New().IndexPage()))
+
+		// article
+		article := article.New()
+		authOnlyGroup.GET("/article/create", wrapHandler(article.CreatePage()))
 	}
 
 })

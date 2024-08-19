@@ -6,6 +6,7 @@ import (
 	"errors"
 	"github/elliot9/ginExample/config"
 	"github/elliot9/ginExample/internal/loader"
+	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/pkg/shutdown"
 	"log"
 	"net/http"
@@ -18,6 +19,7 @@ import (
 func init() {
 	// 註冊序列化類型
 	gob.Register(map[string]interface{}{})
+	gob.Register(models.Admin{})
 	config.Load()
 }
 

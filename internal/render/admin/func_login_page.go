@@ -18,7 +18,7 @@ func (h *handler) LoginPage() context.HandlerFunc {
 			}
 		}
 
-		c.HTML("admin/login.html", gin.H{
+		c.HTML("login", gin.H{
 			"messages": messages,
 		})
 	}

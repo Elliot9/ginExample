@@ -18,7 +18,7 @@ func (h *handler) RegisterPage() context.HandlerFunc {
 			}
 		}
 
-		c.HTML("admin/register.html", gin.H{
+		c.HTML("admin/register", gin.H{
 			"messages": messages,
 		})
 	}
