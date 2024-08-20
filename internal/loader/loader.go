@@ -20,7 +20,6 @@ type Server struct {
 
 func NewHTTPServer() (*Server, error) {
 	mux := gin.New()
-
 	// 初始化 MYSQL
 	dbRepo, err := mysql.New()
 	if err != nil {

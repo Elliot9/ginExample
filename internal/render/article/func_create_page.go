@@ -11,7 +11,7 @@ func (h *handler) CreatePage() context.HandlerFunc {
 	return func(c context.Context) {
 		admin := auth.New().Me(c)
 		c.HTML("article/create", gin.H{
-			"title": "Dashboard",
+			"title": "新增文章",
 			"admin": admin,
 		})
 	}

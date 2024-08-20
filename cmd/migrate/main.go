@@ -31,6 +31,7 @@ func main() {
 	tx := db.Begin()
 	err = tx.AutoMigrate(
 		&models.Admin{},
+		&models.Article{},
 		// append other models here...
 	)
 

@@ -1,8 +1,6 @@
 {{ define "dashboard/index" }}
-{{ template "layout" . }}
-{{ end }}
-
-{{ define "content" }}
+{{ template "layout_header" . }}
+{{ template "layout_body" . }}
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <div class="bg-white rounded-lg shadow-md p-6">
         <h3 class="text-lg font-semibold mb-2">文章數量</h3>
@@ -17,4 +15,5 @@
         <p class="text-3xl font-bold text-purple-600">12,345</p>
     </div>
 </div>
+{{ template "layout_bottom" . }}
 {{ end }}
