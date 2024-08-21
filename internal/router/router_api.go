@@ -16,8 +16,9 @@ var apiRouter = router(func(r *resource) {
 		apiAuthGroup := api.Group("", middleware.AdaptMiddleware(r.middleware.Auth()))
 		{
 			article := article.New(r.db, r.cache, r.validator)
-			apiAuthGroup.POST("/article/create", wrapHandler(article.Create()))
-			apiAuthGroup.POST("/article/temporary", wrapHandler(article.Temporary()))
+			apiAuthGroup.POST("/articles/create", wrapHandler(article.Create()))
+			apiAuthGroup.POST("/articles/temporary", wrapHandler(article.Temporary()))
+			apiAuthGroup.POST("/articles/:id/update", wrapHandler(article.Update()))
 		}
 	}
 })

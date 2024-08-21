@@ -25,7 +25,8 @@ var renderApi = router(func(r *resource) {
 
 		// article
 		article := article.New(r.db, r.cache, r.validator)
-		authOnlyGroup.GET("/article/create", wrapHandler(article.CreatePage()))
+		authOnlyGroup.GET("/articles/create", wrapHandler(article.CreatePage()))
 		authOnlyGroup.GET("/articles", wrapHandler(article.ListPage()))
+		authOnlyGroup.GET("/articles/:id/update", wrapHandler(article.UpdatePage()))
 	}
 })

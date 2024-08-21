@@ -28,7 +28,8 @@ func (h *handler) ListPage() context.HandlerFunc {
 			return
 		}
 
-		pg, err := h.service.GetList(req.Page, req.SortBy, req.Keyword)
+		admin := auth.New().Me(c)
+		pg, err := h.service.GetList(admin, req.Page, req.SortBy, req.Keyword)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "文章失敗",
@@ -41,7 +42,6 @@ func (h *handler) ListPage() context.HandlerFunc {
 			totalPagesMap[i] = i
 		}
 
-		admin := auth.New().Me(c)
 		c.HTML("article/list", gin.H{
 			"title":         "文章列表",
 			"admin":         admin,

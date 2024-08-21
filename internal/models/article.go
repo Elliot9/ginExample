@@ -8,4 +8,5 @@ type Article struct {
 	Content string     `json:"content" gorm:"type:longtext"`
 	Status  bool       `json:"status" gorm:"type:bool;default:false;index"`
 	Time    *time.Time `json:"time,omitempty" gorm:"type:datetime;nullable"`
+	AdminId int        `json:"adminId" gorm:"type:uint;index"`
 }

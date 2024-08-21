@@ -16,9 +16,9 @@ const (
 
 type ArticleRepo interface {
 	Create(newArticle *models.Article) (id int, err error)
-	FindById(id int) (*models.Article, error)
+	FindById(adminId int, id int) (*models.Article, error)
 	Update(article *models.Article) error
-	GetList(page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error)
+	GetList(adminId int, page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error)
 }
 
 type articleRepo struct {
@@ -39,9 +39,9 @@ func (repo *articleRepo) Create(newArticle *models.Article) (id int, err error) 
 	return int(newArticle.ID), nil
 }
 
-func (repo *articleRepo) FindById(id int) (*models.Article, error) {
+func (repo *articleRepo) FindById(adminId int, id int) (*models.Article, error) {
 	var article models.Article
-	result := repo.db.GetDbR().First(&article, id)
+	result := repo.db.GetDbR().Where("admin_id = ?", adminId).First(&article, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -56,8 +56,8 @@ func (repo *articleRepo) Update(article *models.Article) error {
 	return nil
 }
 
-func (repo *articleRepo) GetList(page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error) {
-	query := repo.db.GetDbR().Model(&models.Article{})
+func (repo *articleRepo) GetList(adminId int, page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error) {
+	query := repo.db.GetDbR().Model(&models.Article{}).Where("admin_id = ?", adminId)
 
 	if keyword != "" {
 		query = query.Where("title LIKE ?", "%"+keyword+"%")

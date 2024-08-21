@@ -1,6 +1,7 @@
 package article
 
 import (
+	"github/elliot9/ginExample/internal/auth"
 	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
 	"time"
@@ -42,7 +43,8 @@ func (h *handler) Create() context.HandlerFunc {
 			}
 		}
 
-		id, err := h.service.Create(req.Title, req.Content, publishTime, true, req.Tags)
+		admin := auth.New().Me(c)
+		id, err := h.service.Create(admin, req.Title, req.Content, publishTime, true, req.Tags)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "文章發佈失敗",

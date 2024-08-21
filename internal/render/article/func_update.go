@@ -10,17 +10,33 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type temporaryArticleReqeust struct {
-	Id      int    `json:"id"`
+type updateArticleReqeust struct {
 	Title   string `json:"title" binding:"required"`
 	Content string `json:"content"`
 	Time    string `json:"time"`
 	Tags    string `json:"tags"`
+	Status  bool   `json:"status"`
 }
 
-func (h *handler) Temporary() context.HandlerFunc {
+func (h *handler) Update() context.HandlerFunc {
 	return func(c context.Context) {
-		req := new(temporaryArticleReqeust)
+		type uri struct {
+			ID int `uri:"id"`
+		}
+		var uriParam uri
+		if err := c.ShouldBindURI(&uriParam); err != nil {
+			c.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		if uriParam.ID == 0 {
+			c.JSON(http.StatusBadRequest, gin.H{
+				"message": "文章不存在",
+			})
+			return
+		}
+
+		req := new(updateArticleReqeust)
 		if err := c.ShouldBindJson(req); err != nil {
 			errors := make(map[string]any)
 			for _, fieldErr := range err.(validator.ValidationErrors) {
@@ -43,23 +59,20 @@ func (h *handler) Temporary() context.HandlerFunc {
 				return
 			}
 		}
-		admin := auth.New().Me(c)
-		if req.Id == 0 {
-			id, err := h.service.Create(admin, req.Title, req.Content, publishTime, false, req.Tags)
-			if err != nil {
-				c.JSON(http.StatusInternalServerError, gin.H{
-					"message": "文章暫存失敗",
-				})
-				return
-			}
 
-			c.JSON(http.StatusOK, gin.H{
-				"message": "文章已暫存",
-				"id":      id,
+		admin := auth.New().Me(c)
+		_, err := h.service.FindById(admin, uriParam.ID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"message": "文章不存在",
 			})
 			return
 		}
 
-		h.service.Update(admin, req.Id, req.Title, req.Content, publishTime, false, req.Tags)
+		h.service.Update(admin, uriParam.ID, req.Title, req.Content, publishTime, req.Status, req.Tags)
+
+		c.JSON(http.StatusOK, gin.H{
+			"message": "文章已更新",
+		})
 	}
 }

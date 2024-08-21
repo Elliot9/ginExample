@@ -188,12 +188,12 @@
             <option value="status" {{ if eq .SortBy "status" }}selected{{ end }}>狀態</option>
         </select>
         <button type="submit" class="btn btn-search">搜索</button>
-        <a href="/admin/article/create" class="btn btn-add">新增文章</a>
+        <a href="/admin/articles/create" class="btn btn-add">新增文章</a>
     </form>
 </div>
 <ul class="article-list">
     {{ range $item := .pg.GetItems }}
-    <li class="article-item" onclick="location.href='/articles/{{$item.ID}}/update';">
+    <li class="article-item" onclick="location.href='/admin/articles/{{$item.ID}}/update';">
         {{ if $item.Status }}
         <span class="article-status status-active">啟用</span>
         {{ else }}

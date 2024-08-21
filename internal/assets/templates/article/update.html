@@ -1,4 +1,4 @@
-{{ define "article/create" }}
+{{ define "article/update" }}
 {{ template "layout_header" . }}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
 <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
@@ -9,18 +9,22 @@
     <form id="articleForm" class="bg-white shadow-lg rounded-lg p-8">
         <div class="mb-6">
             <label for="title" class="block text-gray-700 text-sm font-bold mb-2">文章標題</label>
-            <input type="text" id="title" name="title" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            <input type="text" id="title" name="title" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" required
+                value="{{ .article.Title }}"
+            >
         </div>
         
         <div class="mb-6">
             <label for="content" class="block text-gray-700 text-sm font-bold mb-2">文章內容</label>
-            <textarea id="content" name="content" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="10"></textarea>
+            <textarea id="content" name="content" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" rows="10">
+                {{ .article.Content }}
+            </textarea>
         </div>
         
         <div class="mb-6">
             <label for="time" class="block text-gray-700 text-sm font-bold mb-2">發佈時間</label>
             <div class="relative">
-                <input type="text" id="time" name="time" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <input type="text" id="time" name="time" class="shadow-sm border-gray-300 rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" value="{{ .article.Time }}">
                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
                     <i class="fas fa-calendar-alt text-gray-400"></i>
                 </div>
@@ -63,6 +67,7 @@
         enableTime: true,
         dateFormat: "Y-m-d H:i",
         minDate: "today",
+        value: "{{ .article.Time }}"
     });
 
     // 取消功能
@@ -72,23 +77,20 @@
         }
     });
     
-    var id = null;
-
     $('#saveButton').on('click', function(e) {
         var formData = {};
         $('#articleForm').serializeArray().forEach(function(item) {
             formData[item.name] = item.value;
-            formData['id'] = id;
             formData['content'] = easyMDE.value();
+            formData['status'] = false;
         });
 
         $.ajax({
-        url: '/api/articles/temporary',
+        url: '/api/articles/{{ .article.ID }}/update',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(formData),
         success: function(response) {
-            id = response.id;
             alert('文章暫時儲存發佈');
         },
         error: function(xhr, status, error) {
@@ -102,12 +104,14 @@
         $('#articleForm').serializeArray().forEach(function(item) {
             formData[item.name] = item.value;
             formData['content'] = easyMDE.value();
+            formData['status'] = true;
         });
 
         $.ajax({
-        url: '/api/articles/create',
+        url: '/api/articles/{{ .article.ID }}/update',
         type: 'POST',
-        data: formData,
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
         success: function(response) {
             alert('文章已發佈');
             window.location.href = '/admin/articles';

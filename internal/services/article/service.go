@@ -1,6 +1,7 @@
 package article
 
 import (
+	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/pkg/paginator"
 	"github/elliot9/ginExample/internal/repository/article"
 	"github/elliot9/ginExample/internal/repository/mysql"
@@ -12,9 +13,10 @@ import (
 var _ Service = (*service)(nil)
 
 type Service interface {
-	Create(title, content string, time *time.Time, status bool, tags ...string) (int, error)
-	Update(id int, title, content string, time *time.Time, status bool, tags ...string) error
-	GetList(page int, sortBy string, keyword string) (paginator.Paginator, error)
+	Create(auth *models.Admin, title, content string, time *time.Time, status bool, tags ...string) (int, error)
+	Update(auth *models.Admin, id int, title, content string, time *time.Time, status bool, tags ...string) error
+	GetList(auth *models.Admin, page int, sortBy string, keyword string) (paginator.Paginator, error)
+	FindById(auth *models.Admin, id int) (*models.Article, error)
 }
 
 type service struct {

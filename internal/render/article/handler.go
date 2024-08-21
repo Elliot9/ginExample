@@ -14,6 +14,8 @@ type Handler interface {
 	Create() context.HandlerFunc
 	ListPage() context.HandlerFunc
 	Temporary() context.HandlerFunc
+	UpdatePage() context.HandlerFunc
+	Update() context.HandlerFunc
 }
 
 type handler struct {
