@@ -83,7 +83,7 @@
         });
 
         $.ajax({
-        url: '/api/articles/temporary',
+        url: '/api/admin/articles/temporary',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(formData),
@@ -105,7 +105,7 @@
         });
 
         $.ajax({
-        url: '/api/articles/create',
+        url: '/api/admin/articles/create',
         type: 'POST',
         data: formData,
         success: function(response) {

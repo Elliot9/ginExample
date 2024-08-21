@@ -18,7 +18,12 @@ type Service interface {
 	GetList(auth *models.Admin, page int, sortBy string, keyword string) (paginator.Paginator, error)
 	FindById(auth *models.Admin, id int) (*models.Article, error)
 	Delete(auth *models.Admin, id int) error
+
+	// api
+	GetAllList(page int, onlyActive bool) (paginator.Paginator, error)
 }
+
+const pageSize = 10
 
 type service struct {
 	validator *validator.Validate

@@ -316,7 +316,7 @@
     function confirmDelete() {
         if (articleIdToDelete) {
             $.ajax({
-                url: '/api/articles/'+articleIdToDelete+'/delete',
+                url: '/api/admin/articles/'+articleIdToDelete+'/delete',
                 type: 'POST',
                 contentType: 'application/json',
                 success: function(response) {

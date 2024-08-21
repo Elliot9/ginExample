@@ -17,6 +17,8 @@ type Handler interface {
 	UpdatePage() context.HandlerFunc
 	Update() context.HandlerFunc
 	Delete() context.HandlerFunc
+	List() context.HandlerFunc
+	Get() context.HandlerFunc
 }
 
 type handler struct {

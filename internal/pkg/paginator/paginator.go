@@ -73,3 +73,36 @@ func NewPaginator[T any](db *gorm.DB, page, pageSize int, dest *[]T) (Paginator,
 		items:      dest,
 	}, nil
 }
+
+func NewPaginatorWithPreload[T any](db *gorm.DB, page, pageSize int, dest *[]T, preloads ...string) (Paginator, error) {
+	if page < 1 {
+		page = DEFAULT_PAGE
+	}
+	if pageSize < 1 {
+		pageSize = DEFAULT_PAGE_SIZE
+	}
+
+	var total int64
+	if err := db.Count(&total).Error; err != nil {
+		return nil, err
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(pageSize)))
+
+	query := db.Offset((page - 1) * pageSize).Limit(pageSize)
+	for _, preload := range preloads {
+		query = query.Preload(preload)
+	}
+
+	if err := query.Find(dest).Error; err != nil {
+		return nil, err
+	}
+
+	return &paginator[T]{
+		page:       page,
+		pageSize:   pageSize,
+		total:      int(total),
+		totalPages: totalPages,
+		items:      dest,
+	}, nil
+}

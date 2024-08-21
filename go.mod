@@ -2,6 +2,8 @@ module github/elliot9/ginExample
 
 go 1.22.5
 
+require github.com/golang/protobuf v1.5.4
+
 require (
 	github.com/bytedance/sonic v1.12.1 // indirect
 	github.com/bytedance/sonic/loader v0.2.0 // indirect

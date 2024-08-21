@@ -1,6 +1,7 @@
 package context
 
 import (
+	"io"
 	"net/http"
 	"net/url"
 
@@ -34,6 +35,7 @@ type Context interface {
 	// 反序列化 PostJson
 	// tags: `json:"id"`
 	ShouldBindJson(obj any) error
+	Body() []byte
 	ResponseWriter() gin.ResponseWriter
 	Session() sessions.Session
 	GetFlash() (map[string]any, bool)
@@ -132,6 +134,12 @@ func (c *context) ShouldBindURI(obj any) error {
 func (c *context) ShouldBindJson(obj any) error {
 	return c.ctx.ShouldBindBodyWithJSON(obj)
 }
+
+func (c *context) Body() []byte {
+	body, _ := io.ReadAll(c.ctx.Request.Body)
+	return body
+}
+
 func (c *context) ResponseWriter() gin.ResponseWriter {
 	return c.ctx.Writer
 }

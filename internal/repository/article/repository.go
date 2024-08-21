@@ -1,6 +1,7 @@
 package article
 
 import (
+	"github/elliot9/ginExample/internal/dtos"
 	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/pkg/paginator"
 	"github/elliot9/ginExample/internal/repository/mysql"
@@ -20,6 +21,7 @@ type ArticleRepo interface {
 	Update(article *models.Article) error
 	GetList(adminId int, page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error)
 	Delete(article *models.Article) error
+	GetAllList(page, pageSize int, sortBy SortBy, onlyActive bool) (paginator.Paginator, error)
 }
 
 type articleRepo struct {
@@ -82,4 +84,23 @@ func (repo *articleRepo) GetList(adminId int, page, pageSize int, sortBy SortBy,
 	}
 
 	return paginator.NewPaginator(query, page, pageSize, &[]models.Article{})
+}
+
+func (repo *articleRepo) GetAllList(page, pageSize int, sortBy SortBy, onlyActive bool) (paginator.Paginator, error) {
+	query := repo.db.GetDbR().Model(&models.Article{})
+
+	switch sortBy {
+	case SortByCreatedAt:
+		query = query.Order("created_at DESC")
+	case SortByStatus:
+		query = query.Order("status DESC")
+	case SortByTitle:
+		query = query.Order("title ASC")
+	}
+
+	if onlyActive {
+		query = query.Where("status = ?", true)
+	}
+
+	return paginator.NewPaginatorWithPreload(query, page, pageSize, &[]dtos.ArticleWithAuthor{}, "Admin")
 }
