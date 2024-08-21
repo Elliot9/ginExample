@@ -19,6 +19,7 @@ var apiRouter = router(func(r *resource) {
 			apiAuthGroup.POST("/articles/create", wrapHandler(article.Create()))
 			apiAuthGroup.POST("/articles/temporary", wrapHandler(article.Temporary()))
 			apiAuthGroup.POST("/articles/:id/update", wrapHandler(article.Update()))
+			apiAuthGroup.POST("/articles/:id/delete", wrapHandler(article.Delete()))
 		}
 	}
 })

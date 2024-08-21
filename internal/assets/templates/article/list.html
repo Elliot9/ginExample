@@ -70,6 +70,7 @@
         align-items: center;
         transition: background-color 0.3s, box-shadow 0.3s;
         cursor: pointer;
+        justify-content: flex-start;
     }
 
     .article-item:hover {
@@ -110,6 +111,7 @@
 
     .article-content {
         flex-grow: 1;
+        margin-right: 15px;
     }
 
     .article-title {
@@ -177,6 +179,51 @@
     .pagination a:hover:not(.active) {
         background-color: #ddd;
     }
+
+    .btn-delete {
+        background-color: #dc3545;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        align-self: center;
+        margin-left: auto; 
+    }
+
+    .btn-delete:hover {
+        background-color: #c82333;
+    }
+
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 300px;
+        text-align: center;
+    }
+
+    .modal-buttons {
+        margin-top: 20px;
+    }
+
+    .modal-buttons button {
+        margin: 0 10px;
+        padding: 5px 15px;
+        cursor: pointer;
+    }
 </style>
 {{ template "layout_body" . }}
 <div class="search-bar">
@@ -194,29 +241,31 @@
 <ul class="article-list">
     {{ range $item := .pg.GetItems }}
     <li class="article-item" onclick="location.href='/admin/articles/{{$item.ID}}/update';">
-        {{ if $item.Status }}
-        <span class="article-status status-active">啟用</span>
-        {{ else }}
-        <span class="article-status status-inactive">未啟用</span>
-        {{ end }}
-        <div class="article-content">
             {{ if $item.Status }}
-            <div class="article-title title-active">{{$item.Title}}</div>
+            <span class="article-status status-active">啟用</span>
             {{ else }}
-            <div class="article-title title-inactive">{{$item.Title}}</div>
+            <span class="article-status status-inactive">未啟用</span>
             {{ end }}
-            <div class="article-meta">
-                {{ with $item.CreatedAt }}
-                創建於: {{ .Format "2006-01-02 15:04:05" }}
+            <div class="article-content">
+                {{ if $item.Status }}
+                <div class="article-title title-active">{{$item.Title}}</div>
+                {{ else }}
+                <div class="article-title title-inactive">{{$item.Title}}</div>
                 {{ end }}
-                {{ with $item.Time }}
-                ｜發布時間: {{ .Format "2006-01-02 15:04:05" }}
-                {{ end }}
-            <div class="tag-container">
-                <span class="tag">生產力</span>
-                <span class="tag">工作</span>
+                <div class="article-meta">
+                    {{ with $item.CreatedAt }}
+                    創建於: {{ .Format "2006-01-02 15:04:05" }}
+                    {{ end }}
+                    {{ with $item.Time }}
+                    ｜發布時間: {{ .Format "2006-01-02 15:04:05" }}
+                    {{ end }}
+                    <div class="tag-container">
+                        <span class="tag">生產力</span>
+                        <span class="tag">工作</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        <button class="btn-delete" onclick="showDeleteConfirmation('{{$item.ID}}',event)">刪除</button>
     </li>
     {{ end }}
 </ul>
@@ -242,5 +291,48 @@
     <a href="/admin/articles?page={{.pg.NextPage}}&sort={{.SortBy}}&keyword={{.Keyword}}">下一頁 &raquo;</a>
     {{end}}
 </div>
+
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <p>確定要刪除這篇文章嗎？</p>
+        <div class="modal-buttons">
+            <button onclick="confirmDelete()">確定</button>
+            <button onclick="cancelDelete()">取消</button>
+        </div>
+    </div>
+</div>
+
+
 {{ template "layout_bottom" . }}
+<script>
+    var articleIdToDelete = null;
+
+    function showDeleteConfirmation(id, event) {
+        event.stopPropagation();
+        articleIdToDelete = id;
+        document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    function confirmDelete() {
+        if (articleIdToDelete) {
+            $.ajax({
+                url: '/api/articles/'+articleIdToDelete+'/delete',
+                type: 'POST',
+                contentType: 'application/json',
+                success: function(response) {
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.log(xhr, status, error);
+                    }
+                });
+        }
+        document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    function cancelDelete() {
+        document.getElementById('deleteModal').style.display = 'none';
+        articleIdToDelete = null;
+    }
+</script>
 {{end}}

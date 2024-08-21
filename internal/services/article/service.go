@@ -17,6 +17,7 @@ type Service interface {
 	Update(auth *models.Admin, id int, title, content string, time *time.Time, status bool, tags ...string) error
 	GetList(auth *models.Admin, page int, sortBy string, keyword string) (paginator.Paginator, error)
 	FindById(auth *models.Admin, id int) (*models.Article, error)
+	Delete(auth *models.Admin, id int) error
 }
 
 type service struct {

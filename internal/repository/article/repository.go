@@ -19,6 +19,7 @@ type ArticleRepo interface {
 	FindById(adminId int, id int) (*models.Article, error)
 	Update(article *models.Article) error
 	GetList(adminId int, page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error)
+	Delete(article *models.Article) error
 }
 
 type articleRepo struct {
@@ -50,6 +51,14 @@ func (repo *articleRepo) FindById(adminId int, id int) (*models.Article, error) 
 
 func (repo *articleRepo) Update(article *models.Article) error {
 	result := repo.db.GetDbW().Save(article)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}
+
+func (repo *articleRepo) Delete(article *models.Article) error {
+	result := repo.db.GetDbW().Delete(article)
 	if result.Error != nil {
 		return result.Error
 	}
