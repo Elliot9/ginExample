@@ -5,5 +5,5 @@ import (
 )
 
 func (s *service) FindById(auth *models.Admin, id int) (*models.Article, error) {
-	return s.repo.FindById(int(auth.ID), id)
+	return s.repo.FindByID(int(auth.ID), id)
 }

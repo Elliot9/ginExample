@@ -17,11 +17,12 @@ const (
 
 type ArticleRepo interface {
 	Create(newArticle *models.Article) (id int, err error)
-	FindById(adminId int, id int) (*models.Article, error)
+	FindByID(adminId int, id int) (*models.Article, error)
 	Update(article *models.Article) error
 	GetList(adminId int, page, pageSize int, sortBy SortBy, keyword string) (paginator.Paginator, error)
 	Delete(article *models.Article) error
 	GetAllList(page, pageSize int, sortBy SortBy, onlyActive bool) (paginator.Paginator, error)
+	GetDetailByID(id int, onlyActive bool) (*dtos.ArticleWithAuthor, error)
 }
 
 type articleRepo struct {
@@ -42,7 +43,7 @@ func (repo *articleRepo) Create(newArticle *models.Article) (id int, err error) 
 	return int(newArticle.ID), nil
 }
 
-func (repo *articleRepo) FindById(adminId int, id int) (*models.Article, error) {
+func (repo *articleRepo) FindByID(adminId int, id int) (*models.Article, error) {
 	var article models.Article
 	result := repo.db.GetDbR().Where("admin_id = ?", adminId).First(&article, id)
 	if result.Error != nil {
@@ -103,4 +104,20 @@ func (repo *articleRepo) GetAllList(page, pageSize int, sortBy SortBy, onlyActiv
 	}
 
 	return paginator.NewPaginatorWithPreload(query, page, pageSize, &[]dtos.ArticleWithAuthor{}, "Admin")
+}
+
+func (repo *articleRepo) GetDetailByID(id int, onlyActive bool) (*dtos.ArticleWithAuthor, error) {
+	var article dtos.ArticleWithAuthor
+	query := repo.db.GetDbR().Model(&models.Article{}).Where("id = ?", id).Preload("Admin")
+
+	if onlyActive {
+		query = query.Where("status = ?", true)
+	}
+
+	result := query.First(&article)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	return &article, nil
 }

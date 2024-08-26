@@ -1,10 +1,13 @@
 package article
 
 import (
+	"github/elliot9/ginExample/internal/dtos"
 	"github/elliot9/ginExample/internal/models"
+	"github/elliot9/ginExample/internal/pkg/cache"
 	"github/elliot9/ginExample/internal/pkg/paginator"
 	"github/elliot9/ginExample/internal/repository/article"
 	"github/elliot9/ginExample/internal/repository/mysql"
+	"github/elliot9/ginExample/internal/repository/redis"
 	"time"
 
 	"github.com/go-playground/validator/v10"
@@ -21,6 +24,7 @@ type Service interface {
 
 	// api
 	GetAllList(page int, onlyActive bool) (paginator.Paginator, error)
+	GetDetailByID(id int, onlyActive bool) (*dtos.ArticleWithAuthor, error)
 }
 
 const pageSize = 10
@@ -28,11 +32,13 @@ const pageSize = 10
 type service struct {
 	validator *validator.Validate
 	repo      article.ArticleRepo
+	cache     cache.Cache
 }
 
-func New(db mysql.Repo, validator *validator.Validate) Service {
+func New(db mysql.Repo, cacheRepo redis.Repo, validator *validator.Validate) Service {
 	return &service{
 		validator: validator,
 		repo:      article.New(db),
+		cache:     cache.New(cacheRepo),
 	}
 }

@@ -3,19 +3,26 @@ package redis
 import (
 	"context"
 	"fmt"
-	"github.com/redis/go-redis/v9"
 	"github/elliot9/ginExample/config"
+
+	"github.com/redis/go-redis/v9"
 )
 
 type Repo interface {
-	Get(ctx context.Context, key string) (string, error)
-	Set(ctx context.Context, key, value string) error
-	Del(ctx context.Context, key string) bool
+	Get() *redis.Client
 	Close() error
 }
 
-type cacheRepo struct {
+type redisRepo struct {
 	client *redis.Client
+}
+
+func (r *redisRepo) Get() *redis.Client {
+	return r.client
+}
+
+func (r *redisRepo) Close() error {
+	return r.client.Close()
 }
 
 func New() (Repo, error) {
@@ -24,7 +31,7 @@ func New() (Repo, error) {
 		return nil, err
 	}
 
-	return &cacheRepo{
+	return &redisRepo{
 		client: client,
 	}, nil
 }
@@ -41,23 +48,4 @@ func redisConnect() (*redis.Client, error) {
 	}
 
 	return client, nil
-}
-
-func (c cacheRepo) Get(ctx context.Context, key string) (string, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c cacheRepo) Set(ctx context.Context, key, value string) error {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c cacheRepo) Del(ctx context.Context, key string) bool {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (c cacheRepo) Close() error {
-	return c.client.Close()
 }

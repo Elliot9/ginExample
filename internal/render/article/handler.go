@@ -23,12 +23,10 @@ type Handler interface {
 
 type handler struct {
 	service article.Service
-	cache   redis.Repo
 }
 
 func New(db mysql.Repo, cache redis.Repo, validator *validator.Validate) Handler {
 	return &handler{
-		cache:   cache,
-		service: article.New(db, validator),
+		service: article.New(db, cache, validator),
 	}
 }
