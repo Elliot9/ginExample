@@ -2,6 +2,7 @@ package router
 
 import (
 	"github/elliot9/ginExample/internal/api/health"
+	"github/elliot9/ginExample/internal/api/oauth"
 	"github/elliot9/ginExample/internal/middleware"
 	"github/elliot9/ginExample/internal/render/article"
 )
@@ -10,9 +11,17 @@ var apiRouter = router(func(r *resource) {
 	api := r.mux.Group("/api")
 	{
 		article := article.New(r.db, r.cache, r.validator)
+		oauth := oauth.New(r.db, r.validator)
 
 		// 健康檢查
 		api.GET("/health", wrapHandler(health.New().Ping()))
+
+		// oauth
+		oauthGroup := api.Group("/auth")
+		{
+			oauthGroup.GET("/:agent", wrapHandler(oauth.GetQuery()))
+			oauthGroup.GET("/:agent/callback", wrapHandler(oauth.Callback()))
+		}
 
 		// admin only
 		apiAuthGroup := api.Group("/admin", middleware.AdaptMiddleware(r.middleware.Auth()))

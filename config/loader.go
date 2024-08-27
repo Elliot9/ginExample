@@ -46,6 +46,23 @@ func Load(fileName ...string) {
 		Port:     loadEnv("REDIS_PORT", 6379),
 		Password: loadEnv("REDIS_PASSWORD", ""),
 	}
+
+	GoogleOauthConfig = &Oauth{
+		ClientID:     loadEnv("GOOGLE_OAUTH_CLIENT_ID", ""),
+		ClientSecret: loadEnv("GOOGLE_OAUTH_CLIENT_SECRET", ""),
+		Scopes: []string{
+			"https://www.googleapis.com/auth/userinfo.profile",
+		},
+	}
+
+	FacebookOauthConfig = &Oauth{
+		ClientID:     loadEnv("FACEBOOK_OAUTH_CLIENT_ID", ""),
+		ClientSecret: loadEnv("FACEBOOK_OAUTH_CLIENT_SECRET", ""),
+		Scopes: []string{
+			"email",
+			"public_profile",
+		},
+	}
 }
 
 func loadEnv[T ~string | ~int | ~float64 | ~bool](key string, defaultValue T) T {

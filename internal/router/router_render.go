@@ -8,6 +8,10 @@ import (
 )
 
 var renderApi = router(func(r *resource) {
+	// r.mux.GET("", func(ctx *gin.Context) {
+	// 	ctx.HTML(200, "index.html", nil)
+	// })
+
 	render := r.mux.Group("/admin")
 	{
 		admin := admin.New(r.db, r.cache, r.logger, r.validator)

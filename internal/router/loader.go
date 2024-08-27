@@ -7,6 +7,7 @@ import (
 	"github/elliot9/ginExample/internal/repository/redis"
 	"net/http"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -50,6 +51,7 @@ func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator 
 	r.mux.LoadHTMLGlob("internal/assets/templates/**/*")
 
 	// global middlewares
+	r.mux.Use(cors.Default())
 	r.mux.Use(sessions.Sessions("mysession", cookie.NewStore([]byte("secret"))))
 	r.mux.Use(middleware.AdaptMiddleware(middleware.NewErrorMiddleware()))
 	r.mux.Use(middleware.AdaptMiddleware(middleware.NewLoggerMiddleware(logger)))
