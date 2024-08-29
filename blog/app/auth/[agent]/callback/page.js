@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter, useSearchParams, useParams } from 'next/navigation';
+import { useAuth } from '@/app/auth';
 
 export default function AuthCallback() {
   const router = useRouter();
@@ -9,36 +10,45 @@ export default function AuthCallback() {
   const params = useParams();
   const [status, setStatus] = useState('處理中...');
   const [error, setError] = useState(null);
+  
+  const code = searchParams.get('code');
+  const state = searchParams.get('state');
+  const agent = params.agent;
+  const isInitialMount = useRef(true);
+  const { login } = useAuth();
 
   useEffect(() => {
-    const code = searchParams.get('code');
-    const state = searchParams.get('state');
-    const agent = params.agent;
-    
-    if (code && agent) {
-      handleAuth(code, agent, state);
-    } else {
-      setError('無效的授權回調');
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      if (code && agent) {
+        handleAuth(code, agent, state);
+      } else {
+        setError('無效的授權回調');
+      }
     }
-  }, [searchParams, params]);
+  }, []);
+
 
   const handleAuth = async (code, agent, state) => {
     try {
+      const params = new URLSearchParams();
+      params.append('code', code);
+      params.append('state', state);
+
       const response = await fetch(`http://localhost:8080/api/auth/${agent}/callback`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, state})
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
       });
 
-      if (!response.ok) throw new Error('授權失敗');
-
       const data = await response.json();
-      if (data.token) {
-        localStorage.setItem('token', data.token);
+
+      if (response.ok) {
         setStatus('登錄成功！正在重定向...');
+        login(data.accessToken, data.refreshToken);
         setTimeout(() => router.push('/'), 2000); // 重定向到首頁
       } else {
-        throw new Error('未收到有效的令牌');
+        throw new Error('授權失敗');
       }
     } catch (error) {
       console.error('Authentication error:', error);
@@ -67,6 +77,7 @@ export default function AuthCallback() {
         return null;
     }
   };
+
 
   return (
     <div className="bg-white rounded-lg shadow-md w-full max-w-md overflow-hidden">

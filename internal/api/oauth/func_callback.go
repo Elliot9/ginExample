@@ -1,14 +1,15 @@
 package oauth
 
 import (
+	"fmt"
 	"github/elliot9/ginExample/internal/pkg/context"
 	"github/elliot9/ginExample/internal/services/oauth"
 	"net/http"
 )
 
 type getCallbackRequest struct {
-	State string `json:"state"`
-	Code  string `json:"code"`
+	State string `form:"state"`
+	Code  string `form:"code"`
 }
 
 func (h *handler) Callback() context.HandlerFunc {
@@ -21,19 +22,31 @@ func (h *handler) Callback() context.HandlerFunc {
 			return
 		}
 		req := new(getCallbackRequest)
-		if err := c.ShouldBindJson(req); err != nil {
+		if err := c.ShouldBindForm(req); err != nil {
 			c.JSON(http.StatusBadRequest, err)
 			return
 		}
 
-		user, err := h.service.Callback(oauth.Agent(agent.Agent), req.State, req.Code)
+		userInfo, err := h.service.Callback(oauth.Agent(agent.Agent), req.State, req.Code)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, err)
+			c.JSON(http.StatusBadRequest, err)
+			return
+		}
+
+		fmt.Printf("userInfo: %v\n", userInfo)
+		accessToken, refreshToken, err := h.service.Login(userInfo)
+		fmt.Printf("accessToken: %v\n", accessToken)
+		fmt.Printf("refreshToken: %v\n", refreshToken)
+		fmt.Printf("err: %v\n", err)
+
+		if err != nil {
+			c.JSON(http.StatusBadRequest, err)
 			return
 		}
 
 		c.JSON(http.StatusOK, map[string]string{
-			"user": user.Email,
+			"accessToken":  accessToken,
+			"refreshToken": refreshToken,
 		})
 	}
 }

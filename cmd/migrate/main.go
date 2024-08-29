@@ -32,6 +32,8 @@ func main() {
 	err = tx.AutoMigrate(
 		&models.Admin{},
 		&models.Article{},
+		&models.User{},
+		&models.UserRefreshToken{},
 		// append other models here...
 	)
 

@@ -20,7 +20,7 @@ var apiRouter = router(func(r *resource) {
 		oauthGroup := api.Group("/auth")
 		{
 			oauthGroup.GET("/:agent", wrapHandler(oauth.GetQuery()))
-			oauthGroup.GET("/:agent/callback", wrapHandler(oauth.Callback()))
+			oauthGroup.POST("/:agent/callback", wrapHandler(oauth.Callback()))
 		}
 
 		// admin only

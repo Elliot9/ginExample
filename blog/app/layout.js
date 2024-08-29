@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import { AuthProvider } from './auth';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -12,7 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
       <body className={`${inter.className} flex flex-col min-h-screen bg-gray-100`}>
-        {children}
+      <AuthProvider>
+          {children}
+        </AuthProvider>
         <footer className="bg-gray-800 text-white text-center py-4 mt-auto">
           <p>&copy; 2024 Elliot. 保留所有權利。</p>
         </footer>

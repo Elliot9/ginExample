@@ -1,8 +1,8 @@
 package oauth
 
 import (
-	"github/elliot9/ginExample/internal/models"
 	"github/elliot9/ginExample/internal/repository/mysql"
+	"github/elliot9/ginExample/internal/repository/user"
 
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/oauth2"
@@ -18,17 +18,18 @@ const (
 type Service interface {
 	GetOauthConfig(agent Agent) *oauth2.Config
 	GetQuery(agent Agent) string
-	Callback(agent Agent, state, code string) (user *models.User, err error)
+	Callback(agent Agent, state, code string) (userInfo *UserInfo, err error)
+	Login(userInfo *UserInfo) (accessToken, refreshToken string, err error)
 }
 
 type service struct {
 	validator *validator.Validate
-	// repo      article.ArticleRepo
+	userRepo  user.UserRepo
 }
 
 func New(db mysql.Repo, validator *validator.Validate) Service {
 	return &service{
 		validator: validator,
-		// repo:      article.New(db),
+		userRepo:  user.New(db),
 	}
 }

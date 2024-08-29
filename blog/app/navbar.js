@@ -1,31 +1,27 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useAuth } from './auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
   const router = useRouter();
-
-  useEffect(() => {
-    // 檢查 localStorage 中是否存在 JWT token
-    const token = localStorage.getItem('token');
-    if (token) {
-      // 這裡可以添加 token 驗證邏輯
-      setIsLoggedIn(true);
-      // 從 token 中解析用戶名,這裡僅為示例
-      setUsername('User'); // 實際應用中,應該從 token 中解析用戶信息
-    }
-  }, []);
-
+  const { isLoggedIn, user, logout, loading } = useAuth();
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setIsLoggedIn(false);
-    setUsername('');
+    logout();
     router.push('/');
   };
+
+  if (loading) {
+    return <nav className="bg-gray-100 shadow-md">
+      <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+        <div className="text-xl font-bold text-gray-800">Blogs</div>
+        <div className="space-x-4">
+          <span className="text-gray-600">載入中...</span>
+        </div>
+      </div>
+    </nav>;
+  }
 
   return (
     <nav className="bg-gray-100 shadow-md">
@@ -36,7 +32,7 @@ const Navbar = () => {
         <div className="space-x-4">
           {isLoggedIn ? (
             <>
-              <span className="text-gray-600">Welcome, {username}</span>
+              <span className="text-gray-600">{user.name}</span>
               <button
                 onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded transition duration-300"

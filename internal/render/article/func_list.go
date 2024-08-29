@@ -1,7 +1,6 @@
 package article
 
 import (
-	"encoding/json"
 	"github/elliot9/ginExample/internal/dtos"
 	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
@@ -19,19 +18,13 @@ type articleItem struct {
 
 func (h *handler) List() context.HandlerFunc {
 	return func(c context.Context) {
-		page := 1
-
-		if body := c.Body(); len(body) != 0 {
-			var data map[string]interface{}
-			if err := json.Unmarshal(body, &data); err != nil {
-				c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-				return
-			}
-
-			page = int(data["page"].(float64))
+		var pageQuery struct {
+			Page int `form:"page,default=1"`
 		}
 
-		pg, err := h.service.GetAllList(page, false)
+		c.ShouldBindQuery(&pageQuery)
+
+		pg, err := h.service.GetAllList(pageQuery.Page, false)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{
 				"message": "讀取失敗",

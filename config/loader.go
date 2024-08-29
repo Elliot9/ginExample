@@ -21,8 +21,9 @@ func Load(fileName ...string) {
 	}
 
 	AppSetting = &App{
-		Url: loadEnv("APP_URL", "localhost:8080"),
-		Env: loadEnv("APP_ENV", "debug"),
+		Url:       loadEnv("APP_URL", "localhost:8080"),
+		Env:       loadEnv("APP_ENV", "debug"),
+		JwtSecret: loadEnv("JWT_SECRET", "secret"),
 	}
 
 	WDbSetting = &Database{
@@ -52,6 +53,7 @@ func Load(fileName ...string) {
 		ClientSecret: loadEnv("GOOGLE_OAUTH_CLIENT_SECRET", ""),
 		Scopes: []string{
 			"https://www.googleapis.com/auth/userinfo.profile",
+			"https://www.googleapis.com/auth/userinfo.email",
 		},
 	}
 
