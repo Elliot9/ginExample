@@ -5,6 +5,7 @@ import (
 	"github/elliot9/ginExample/internal/pkg/context"
 	"github/elliot9/ginExample/internal/repository/mysql"
 	"github/elliot9/ginExample/internal/repository/redis"
+	"github/elliot9/ginExample/pkg/mailer"
 	"net/http"
 
 	"github.com/gin-contrib/cors"
@@ -22,6 +23,7 @@ type resource struct {
 	logger     *zap.Logger
 	validator  *validator.Validate
 	middleware RouterMiddleware
+	mailer     mailer.Mailer
 }
 
 var _ routerRegister = (router)(nil)
@@ -36,7 +38,7 @@ func (ro router) register(r *resource) {
 	ro(r)
 }
 
-func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator *validator.Validate) {
+func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator *validator.Validate, mailer mailer.Mailer) {
 	logger := zap.NewExample()
 	r := &resource{
 		mux:        mux,
@@ -45,6 +47,7 @@ func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator 
 		logger:     logger,
 		validator:  validator,
 		middleware: newRouterMiddleware(),
+		mailer:     mailer,
 	}
 
 	r.mux.StaticFS("/assets", http.Dir("internal/assets"))

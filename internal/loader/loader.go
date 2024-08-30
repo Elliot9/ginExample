@@ -2,9 +2,11 @@ package loader
 
 import (
 	"fmt"
+	"github/elliot9/ginExample/config"
 	"github/elliot9/ginExample/internal/repository/mysql"
 	"github/elliot9/ginExample/internal/repository/redis"
 	"github/elliot9/ginExample/internal/router"
+	"github/elliot9/ginExample/pkg/mailer"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -16,6 +18,7 @@ type Server struct {
 	Validator *validator.Validate
 	Db        mysql.Repo
 	Cache     redis.Repo
+	Mailer    mailer.Mailer
 }
 
 func NewHTTPServer() (*Server, error) {
@@ -39,13 +42,27 @@ func NewHTTPServer() (*Server, error) {
 	// 初始化 Validator
 	validator := validator.New()
 
+	// 初始化 Mailer
+	mailer := mailer.New(getMailConfig())
+
 	// 註冊 Router
-	router.RegisterRouter(mux, dbRepo, redisRepo, validator)
+	router.RegisterRouter(mux, dbRepo, redisRepo, validator, mailer)
 
 	return &Server{
 		Mux:       mux,
 		Validator: validator,
 		Db:        dbRepo,
 		Cache:     redisRepo,
+		Mailer:    mailer,
 	}, nil
+}
+
+func getMailConfig() *mailer.Option {
+	return &mailer.Option{
+		Host:       config.MailerSetting.Host,
+		Port:       config.MailerSetting.Port,
+		User:       config.MailerSetting.UserName,
+		Password:   config.MailerSetting.Password,
+		SenderName: config.MailerSetting.SenderName,
+	}
 }

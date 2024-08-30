@@ -1,0 +1,97 @@
+{{ define "mail/welcome" }}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>歡迎加入我們的大家庭！</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f6f9fc;
+            margin: 0;
+            padding: 0;
+        }
+        .wrapper {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo img {
+            max-width: 150px;
+        }
+        p {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #e8c36f;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            transition: background-color 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #efb429;
+        }
+        .cta {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container">
+            <div class="logo">
+                <img src="https://example.com/logo.png" alt="公司標誌">
+            </div>
+            <h1>歡迎加入我們的大家庭！</h1>
+            <p>親愛的 {{.Username}}</p>
+            <p>我們非常高興您選擇加入我們的社群。您的加入讓我們的大家庭更加豐富多彩！</p>
+            <p>為了確保您能夠享受所有的會員權益，請點擊下方的按鈕來驗證您的電子郵件地址：</p>
+            <div class="cta">
+                <a href="{{.VerificationLink}}" class="btn">立即驗證我的帳戶</a>
+            </div>
+            <p>如果您有任何疑問或需要協助，我們的客戶支援團隊隨時為您服務。</p>
+            <p>再次感謝您的加入，我們期待能為您帶來精彩的體驗！</p>
+            <p>誠摯的問候，</p>
+            <p><strong>{{.TeamName}} 團隊</strong></p>
+        </div>
+        <div class="footer">
+            <p>本郵件由系統自動發送，請勿直接回覆。</p>
+            <p>&copy; 2024 {{.CompanyName}}. 版權所有。</p>
+        </div>
+    </div>
+</body>
+</html>
+{{ end }}

@@ -21,6 +21,7 @@ func Load(fileName ...string) {
 	}
 
 	AppSetting = &App{
+		Name:      loadEnv("APP_NAME", "example"),
 		Url:       loadEnv("APP_URL", "localhost:8080"),
 		Env:       loadEnv("APP_ENV", "debug"),
 		JwtSecret: loadEnv("JWT_SECRET", "secret"),
@@ -64,6 +65,14 @@ func Load(fileName ...string) {
 			"email",
 			"public_profile",
 		},
+	}
+
+	MailerSetting = &Mailer{
+		Host:       loadEnv("MAILER_HOST", "smtp.example.com"),
+		Port:       loadEnv("MAILER_PORT", 587),
+		UserName:   loadEnv("MAILER_USERNAME", "user@example.com"),
+		Password:   loadEnv("MAILER_PASSWORD", "password"),
+		SenderName: loadEnv("MAILER_SENDER_NAME", "Mailer"),
 	}
 }
 
