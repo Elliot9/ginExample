@@ -74,6 +74,13 @@ func Load(fileName ...string) {
 		Password:   loadEnv("MAILER_PASSWORD", "password"),
 		SenderName: loadEnv("MAILER_SENDER_NAME", "Mailer"),
 	}
+
+	AmqpSetting = &Amqp{
+		Host:     loadEnv("AMQP_HOST", "127.0.0.1"),
+		Port:     loadEnv("AMQP_PORT", 5672),
+		User:     loadEnv("AMQP_USER", "guest"),
+		Password: loadEnv("AMQP_PASSWORD", "guest"),
+	}
 }
 
 func loadEnv[T ~string | ~int | ~float64 | ~bool](key string, defaultValue T) T {

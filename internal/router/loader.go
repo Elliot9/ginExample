@@ -3,6 +3,7 @@ package router
 import (
 	"github/elliot9/ginExample/internal/middleware"
 	"github/elliot9/ginExample/internal/pkg/context"
+	"github/elliot9/ginExample/internal/repository/amqp"
 	"github/elliot9/ginExample/internal/repository/mysql"
 	"github/elliot9/ginExample/internal/repository/redis"
 	"github/elliot9/ginExample/pkg/mailer"
@@ -24,6 +25,7 @@ type resource struct {
 	validator  *validator.Validate
 	middleware RouterMiddleware
 	mailer     mailer.Mailer
+	amqp       amqp.Repo
 }
 
 var _ routerRegister = (router)(nil)
@@ -38,7 +40,7 @@ func (ro router) register(r *resource) {
 	ro(r)
 }
 
-func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator *validator.Validate, mailer mailer.Mailer) {
+func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator *validator.Validate, mailer mailer.Mailer, amqp amqp.Repo) {
 	logger := zap.NewExample()
 	r := &resource{
 		mux:        mux,
@@ -48,6 +50,7 @@ func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator 
 		validator:  validator,
 		middleware: newRouterMiddleware(),
 		mailer:     mailer,
+		amqp:       amqp,
 	}
 
 	r.mux.StaticFS("/assets", http.Dir("internal/assets"))

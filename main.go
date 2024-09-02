@@ -7,6 +7,7 @@ import (
 	"github/elliot9/ginExample/config"
 	"github/elliot9/ginExample/internal/loader"
 	"github/elliot9/ginExample/internal/models"
+	"github/elliot9/ginExample/internal/services/queue/consumer"
 	"github/elliot9/ginExample/pkg/shutdown"
 	"log"
 	"net/http"
@@ -42,12 +43,23 @@ func main() {
 		Handler: s.Mux,
 	}
 
+	// 啟動 Http Server
 	go func() {
 		log.Printf("[info] Http Server start listening %s\n", config.AppSetting.Url)
 		if err := server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			log.Fatalf("HTTP server startup error: %v", err)
 		}
 		log.Println("[info] Stopped serving new connections.")
+	}()
+
+	// 啟動 AMQP Server
+	amqpService := consumer.New(s.Amqp, s.Mailer)
+	go func() {
+		if err := amqpService.EmailWelcome(); err != nil {
+			log.Fatalf("AMQP server startup error: %v", err)
+		}
+
+		log.Println("[info] AMQP Server stop listening.")
 	}()
 
 	shutdown.New(syscall.SIGINT, syscall.SIGTERM).OnShutdown(func() {
@@ -74,6 +86,12 @@ func main() {
 		if s.Cache != nil {
 			_ = s.Cache.Close()
 			log.Println("[info] Redis shutdown complete.")
+		}
+	}, func() {
+		// 關閉 AMQP connection
+		if s.Amqp != nil {
+			_ = s.Amqp.Close()
+			log.Println("[info] AMQP shutdown complete.")
 		}
 	})
 }

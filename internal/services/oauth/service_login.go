@@ -27,12 +27,21 @@ func (s *service) Login(userInfo *UserInfo) (accessToken, refreshToken string, e
 		if err != nil {
 			return "", "", err
 		}
+
+		err = s.SentWelcomeMail(userInfo.Email, userInfo.Name, "https://example.com/verify")
+		if err != nil {
+			return "", "", err
+		}
 	}
 
 	refreshToken = jwt.GenerateRefreshToken()
 	accessToken, err = jwt.GenerateToken(user.Email, map[string]any{
 		"name": user.Name,
 	})
+
+	if err != nil {
+		return "", "", err
+	}
 
 	userRefreshToken := &models.UserRefreshToken{
 		UserID:    user.ID,

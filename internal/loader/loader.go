@@ -3,6 +3,7 @@ package loader
 import (
 	"fmt"
 	"github/elliot9/ginExample/config"
+	"github/elliot9/ginExample/internal/repository/amqp"
 	"github/elliot9/ginExample/internal/repository/mysql"
 	"github/elliot9/ginExample/internal/repository/redis"
 	"github/elliot9/ginExample/internal/router"
@@ -19,6 +20,7 @@ type Server struct {
 	Db        mysql.Repo
 	Cache     redis.Repo
 	Mailer    mailer.Mailer
+	Amqp      amqp.Repo
 }
 
 func NewHTTPServer() (*Server, error) {
@@ -45,8 +47,15 @@ func NewHTTPServer() (*Server, error) {
 	// 初始化 Mailer
 	mailer := mailer.New(getMailConfig())
 
+	// 初始化 Amqp
+	amqp, err := amqp.New()
+	if err != nil {
+		fmt.Println(err)
+	}
+	log.Println("[info] Amqp connection")
+
 	// 註冊 Router
-	router.RegisterRouter(mux, dbRepo, redisRepo, validator, mailer)
+	router.RegisterRouter(mux, dbRepo, redisRepo, validator, mailer, amqp)
 
 	return &Server{
 		Mux:       mux,
@@ -54,6 +63,7 @@ func NewHTTPServer() (*Server, error) {
 		Db:        dbRepo,
 		Cache:     redisRepo,
 		Mailer:    mailer,
+		Amqp:      amqp,
 	}, nil
 }
 

@@ -1,6 +1,7 @@
 package oauth
 
 import (
+	"github/elliot9/ginExample/internal/repository/amqp"
 	"github/elliot9/ginExample/internal/repository/mysql"
 	"github/elliot9/ginExample/internal/repository/user"
 
@@ -20,16 +21,19 @@ type Service interface {
 	GetQuery(agent Agent) string
 	Callback(agent Agent, state, code string) (userInfo *UserInfo, err error)
 	Login(userInfo *UserInfo) (accessToken, refreshToken string, err error)
+	SentWelcomeMail(to, name, url string) error
 }
 
 type service struct {
 	validator *validator.Validate
 	userRepo  user.UserRepo
+	amqp      amqp.Repo
 }
 
-func New(db mysql.Repo, validator *validator.Validate) Service {
+func New(db mysql.Repo, validator *validator.Validate, amqp amqp.Repo) Service {
 	return &service{
 		validator: validator,
 		userRepo:  user.New(db),
+		amqp:      amqp,
 	}
 }
