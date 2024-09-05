@@ -54,14 +54,19 @@ func main() {
 
 	// 啟動 AMQP Server
 	amqpService := consumer.New(s.Amqp, s.Mailer)
-	go func() {
-		if err := amqpService.EmailWelcome(); err != nil {
-			log.Fatalf("AMQP server startup error: %v", err)
-		}
+	if amqpService == nil {
+		log.Println("[info] AMQP server is nil")
+	} else {
+		go func() {
+			if err := amqpService.EmailWelcome(); err != nil {
+				log.Fatalf("AMQP server startup error: %v", err)
+			}
 
-		log.Println("[info] AMQP Server stop listening.")
-	}()
+			log.Println("[info] AMQP Server stop listening.")
+		}()
+	}
 
+	// 順序關閉 Http Server、AMQP Server、Redis、DB
 	shutdown.New(syscall.SIGINT, syscall.SIGTERM).OnShutdown(func() {
 		// 關閉 Http Server
 		shutdownCtx, shutdownRelease := context.WithTimeout(context.Background(), 10*time.Second)
@@ -72,6 +77,21 @@ func main() {
 		}
 		log.Println("[info] Http Server shutdown complete.")
 	}, func() {
+		// 關閉 AMQP connection
+		if s.Amqp != nil {
+			_ = s.Amqp.Close()
+			log.Println("[info] AMQP shutdown complete.")
+		}
+	}, func() {
+		// 關閉 Redis connection
+		if s.Cache != nil {
+			_ = s.Cache.Close()
+			log.Println("[info] Redis shutdown complete.")
+		}
+	}, func() {
+		if s.Db == nil {
+			return
+		}
 		// 關閉 DB connection
 		if s.Db.GetDbR() != nil {
 			_ = s.Db.DbRClose()
@@ -81,17 +101,5 @@ func main() {
 			_ = s.Db.DbWClose()
 		}
 		log.Println("[info] DB shutdown complete.")
-	}, func() {
-		// 關閉 Redis connection
-		if s.Cache != nil {
-			_ = s.Cache.Close()
-			log.Println("[info] Redis shutdown complete.")
-		}
-	}, func() {
-		// 關閉 AMQP connection
-		if s.Amqp != nil {
-			_ = s.Amqp.Close()
-			log.Println("[info] AMQP shutdown complete.")
-		}
 	})
 }

@@ -7,7 +7,6 @@ import (
 	"github/elliot9/ginExample/internal/repository/amqp"
 	"github/elliot9/ginExample/internal/services/mail"
 	"github/elliot9/ginExample/pkg/mailer"
-	"log"
 
 	"github.com/rabbitmq/amqp091-go"
 )
@@ -22,6 +21,10 @@ type service struct {
 }
 
 func New(amqp amqp.Repo, mailer mailer.Mailer) Service {
+	if amqp == nil {
+		return nil
+	}
+
 	return &service{
 		amqp:   amqp,
 		mailer: mailer,
@@ -34,7 +37,7 @@ func (s *service) EmailWelcome() error {
 		Args:    amqp091.Table{"x-queue-type": "quorum"},
 	})
 	if err != nil {
-		log.Fatalf("AMQP server startup error: %v", err)
+		return fmt.Errorf("queue declare error: %w", err)
 	}
 
 	return s.amqp.Consume(

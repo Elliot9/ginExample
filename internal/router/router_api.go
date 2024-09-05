@@ -11,7 +11,7 @@ var apiRouter = router(func(r *resource) {
 	api := r.mux.Group("/api")
 	{
 		article := article.New(r.db, r.cache, r.validator)
-		oauth := oauth.New(r.db, r.validator)
+		oauth := oauth.New(r.db, r.validator, r.amqp)
 
 		// 健康檢查
 		api.GET("/health", wrapHandler(health.New().Ping()))

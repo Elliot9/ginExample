@@ -3,7 +3,6 @@ package shutdown
 import (
 	"os"
 	"os/signal"
-	"sync"
 	"syscall"
 )
 
@@ -29,15 +28,9 @@ func New(signals ...syscall.Signal) Hook {
 func (h *hook) OnShutdown(funcs ...func()) {
 	<-h.ch
 
-	wg := &sync.WaitGroup{}
 	for _, f := range funcs {
-		wg.Add(1)
-		go func(f func()) {
-			defer wg.Done()
-			f()
-		}(f)
+		f()
 	}
 
-	wg.Wait()
 	close(h.ch)
 }

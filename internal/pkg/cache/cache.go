@@ -29,6 +29,10 @@ type cacheRepo struct {
 }
 
 func New(client redisRepo.Repo) Cache {
+	if client == nil {
+		return nil
+	}
+
 	return &cacheRepo{
 		client: client.Get(),
 	}
