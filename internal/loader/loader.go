@@ -2,13 +2,14 @@ package loader
 
 import (
 	"fmt"
-	"github/elliot9/ginExample/config"
-	"github/elliot9/ginExample/internal/repository/amqp"
-	"github/elliot9/ginExample/internal/repository/mysql"
-	"github/elliot9/ginExample/internal/repository/redis"
-	"github/elliot9/ginExample/internal/router"
-	"github/elliot9/ginExample/pkg/mailer"
 	"log"
+
+	"github.com/elliot9/gin-example/config"
+	"github.com/elliot9/gin-example/internal/repository/amqp"
+	"github.com/elliot9/gin-example/internal/repository/mysql"
+	"github.com/elliot9/gin-example/internal/repository/redis"
+	"github.com/elliot9/gin-example/internal/router"
+	"github.com/elliot9/gin-example/pkg/mailer"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

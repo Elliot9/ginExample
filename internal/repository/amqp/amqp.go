@@ -3,8 +3,9 @@ package amqp
 import (
 	"context"
 	"fmt"
-	"github/elliot9/ginExample/config"
 	"log"
+
+	"github.com/elliot9/gin-example/config"
 
 	amqp "github.com/rabbitmq/amqp091-go"
 )

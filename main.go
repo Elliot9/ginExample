@@ -4,15 +4,16 @@ import (
 	"context"
 	"encoding/gob"
 	"errors"
-	"github/elliot9/ginExample/config"
-	"github/elliot9/ginExample/internal/loader"
-	"github/elliot9/ginExample/internal/models"
-	"github/elliot9/ginExample/internal/services/queue/consumer"
-	"github/elliot9/ginExample/pkg/shutdown"
 	"log"
 	"net/http"
 	"syscall"
 	"time"
+
+	"github.com/elliot9/gin-example/config"
+	"github.com/elliot9/gin-example/internal/loader"
+	"github.com/elliot9/gin-example/internal/models"
+	"github.com/elliot9/gin-example/internal/services/queue/consumer"
+	"github.com/elliot9/gin-example/pkg/shutdown"
 
 	"github.com/gin-gonic/gin"
 )

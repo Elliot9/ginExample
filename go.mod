@@ -1,4 +1,4 @@
-module github/elliot9/ginExample
+module github.com/elliot9/gin-example
 
 go 1.22.5
 

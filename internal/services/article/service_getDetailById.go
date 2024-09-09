@@ -3,8 +3,9 @@ package article
 import (
 	"context"
 	"encoding/json"
-	"github/elliot9/ginExample/internal/dtos"
 	"strconv"
+
+	"github.com/elliot9/gin-example/internal/dtos"
 )
 
 func (s *service) GetDetailByID(id int, onlyActive bool) (*dtos.ArticleWithAuthor, error) {

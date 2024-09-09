@@ -2,9 +2,10 @@ package article
 
 import (
 	"context"
-	"github/elliot9/ginExample/internal/models"
 	"strconv"
 	"time"
+
+	"github.com/elliot9/gin-example/internal/models"
 )
 
 func (s *service) Update(auth *models.Admin, id int, title, content string, time *time.Time, status bool, tags ...string) error {

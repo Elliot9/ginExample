@@ -2,8 +2,9 @@ package article
 
 import (
 	"context"
-	"github/elliot9/ginExample/internal/models"
 	"strconv"
+
+	"github.com/elliot9/gin-example/internal/models"
 )
 
 func (s *service) Delete(auth *models.Admin, id int) error {

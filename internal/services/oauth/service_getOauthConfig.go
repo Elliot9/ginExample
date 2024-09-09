@@ -1,7 +1,7 @@
 package oauth
 
 import (
-	"github/elliot9/ginExample/config"
+	"github.com/elliot9/gin-example/config"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"

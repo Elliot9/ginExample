@@ -1,11 +1,10 @@
 package oauth
 
 import (
-	"github/elliot9/ginExample/internal/pkg/context"
-	"github/elliot9/ginExample/internal/repository/amqp"
-	"github/elliot9/ginExample/internal/repository/mysql"
-	"github/elliot9/ginExample/internal/services/oauth"
-
+	"github.com/elliot9/gin-example/internal/pkg/context"
+	"github.com/elliot9/gin-example/internal/repository/amqp"
+	"github.com/elliot9/gin-example/internal/repository/mysql"
+	"github.com/elliot9/gin-example/internal/services/oauth"
 	"github.com/go-playground/validator/v10"
 )
 

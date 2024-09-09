@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 
-	"github/elliot9/ginExample/config"
-	"github/elliot9/ginExample/internal/models"
+	"github.com/elliot9/gin-example/config"
+	"github.com/elliot9/gin-example/internal/models"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

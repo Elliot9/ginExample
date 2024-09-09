@@ -22,7 +22,7 @@ func Load(fileName ...string) {
 
 	AppSetting = &App{
 		Name:      loadEnv("APP_NAME", "example"),
-		Url:       loadEnv("APP_URL", "localhost:8080"),
+		Url:       loadEnv("APP_URL", "0.0.0.0:8080"),
 		Env:       loadEnv("APP_ENV", "debug"),
 		JwtSecret: loadEnv("JWT_SECRET", "secret"),
 	}

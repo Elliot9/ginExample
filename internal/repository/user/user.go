@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github/elliot9/ginExample/internal/models"
-	"github/elliot9/ginExample/internal/repository/mysql"
+	"github.com/elliot9/gin-example/internal/models"
+	"github.com/elliot9/gin-example/internal/repository/mysql"
 
 	"gorm.io/gorm"
 )

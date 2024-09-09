@@ -2,8 +2,9 @@ package jwt
 
 import (
 	"encoding/hex"
-	"github/elliot9/ginExample/config"
 	"time"
+
+	"github.com/elliot9/gin-example/config"
 
 	"crypto/rand"
 

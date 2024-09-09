@@ -3,7 +3,8 @@ package redis
 import (
 	"context"
 	"fmt"
-	"github/elliot9/ginExample/config"
+
+	"github.com/elliot9/gin-example/config"
 
 	"github.com/redis/go-redis/v9"
 )

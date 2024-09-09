@@ -1,9 +1,10 @@
 package oauth
 
 import (
-	"github/elliot9/ginExample/internal/pkg/context"
-	"github/elliot9/ginExample/internal/services/oauth"
 	"net/http"
+
+	"github.com/elliot9/gin-example/internal/pkg/context"
+	"github.com/elliot9/gin-example/internal/services/oauth"
 )
 
 type getQueryRequest struct {

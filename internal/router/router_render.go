@@ -1,10 +1,10 @@
 package router
 
 import (
-	"github/elliot9/ginExample/internal/middleware"
-	"github/elliot9/ginExample/internal/render/admin"
-	"github/elliot9/ginExample/internal/render/article"
-	"github/elliot9/ginExample/internal/render/dashboard"
+	"github.com/elliot9/gin-example/internal/middleware"
+	"github.com/elliot9/gin-example/internal/render/admin"
+	"github.com/elliot9/gin-example/internal/render/article"
+	"github.com/elliot9/gin-example/internal/render/dashboard"
 )
 
 var renderApi = router(func(r *resource) {

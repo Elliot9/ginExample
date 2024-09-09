@@ -2,7 +2,8 @@ package admin
 
 import (
 	"errors"
-	"github/elliot9/ginExample/internal/models"
+
+	"github.com/elliot9/gin-example/internal/models"
 )
 
 func (s *service) Login(email, password string) (*models.Admin, error) {

@@ -1,10 +1,10 @@
 package router
 
 import (
-	"github/elliot9/ginExample/internal/api/health"
-	"github/elliot9/ginExample/internal/api/oauth"
-	"github/elliot9/ginExample/internal/middleware"
-	"github/elliot9/ginExample/internal/render/article"
+	"github.com/elliot9/gin-example/internal/api/health"
+	"github.com/elliot9/gin-example/internal/api/oauth"
+	"github.com/elliot9/gin-example/internal/middleware"
+	"github.com/elliot9/gin-example/internal/render/article"
 )
 
 var apiRouter = router(func(r *resource) {

@@ -1,14 +1,15 @@
 package article
 
 import (
-	"github/elliot9/ginExample/internal/dtos"
-	"github/elliot9/ginExample/internal/models"
-	"github/elliot9/ginExample/internal/pkg/cache"
-	"github/elliot9/ginExample/internal/pkg/paginator"
-	"github/elliot9/ginExample/internal/repository/article"
-	"github/elliot9/ginExample/internal/repository/mysql"
-	"github/elliot9/ginExample/internal/repository/redis"
 	"time"
+
+	"github.com/elliot9/gin-example/internal/dtos"
+	"github.com/elliot9/gin-example/internal/models"
+	"github.com/elliot9/gin-example/internal/pkg/cache"
+	"github.com/elliot9/gin-example/internal/pkg/paginator"
+	"github.com/elliot9/gin-example/internal/repository/article"
+	"github.com/elliot9/gin-example/internal/repository/mysql"
+	"github.com/elliot9/gin-example/internal/repository/redis"
 
 	"github.com/go-playground/validator/v10"
 )

@@ -1,13 +1,14 @@
 package router
 
 import (
-	"github/elliot9/ginExample/internal/middleware"
-	"github/elliot9/ginExample/internal/pkg/context"
-	"github/elliot9/ginExample/internal/repository/amqp"
-	"github/elliot9/ginExample/internal/repository/mysql"
-	"github/elliot9/ginExample/internal/repository/redis"
-	"github/elliot9/ginExample/pkg/mailer"
 	"net/http"
+
+	"github.com/elliot9/gin-example/internal/middleware"
+	"github.com/elliot9/gin-example/internal/pkg/context"
+	"github.com/elliot9/gin-example/internal/repository/amqp"
+	"github.com/elliot9/gin-example/internal/repository/mysql"
+	"github.com/elliot9/gin-example/internal/repository/redis"
+	"github.com/elliot9/gin-example/pkg/mailer"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
@@ -54,7 +55,7 @@ func RegisterRouter(mux *gin.Engine, db mysql.Repo, cache redis.Repo, validator 
 	}
 
 	r.mux.StaticFS("/assets", http.Dir("internal/assets"))
-	r.mux.LoadHTMLGlob("internal/assets/templates/**/*")
+	r.mux.LoadHTMLGlob("internal/templates/**/*")
 
 	// global middlewares
 	r.mux.Use(cors.Default())

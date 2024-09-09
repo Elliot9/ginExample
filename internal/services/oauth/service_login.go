@@ -1,9 +1,10 @@
 package oauth
 
 import (
-	"github/elliot9/ginExample/internal/models"
-	"github/elliot9/ginExample/internal/pkg/jwt"
 	"time"
+
+	"github.com/elliot9/gin-example/internal/models"
+	"github.com/elliot9/gin-example/internal/pkg/jwt"
 
 	"gorm.io/gorm"
 )

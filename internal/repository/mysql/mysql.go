@@ -2,7 +2,8 @@ package mysql
 
 import (
 	"fmt"
-	"github/elliot9/ginExample/config"
+
+	"github.com/elliot9/gin-example/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )

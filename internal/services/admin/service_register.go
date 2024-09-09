@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github/elliot9/ginExample/internal/models"
+	"github.com/elliot9/gin-example/internal/models"
 )
 
 func (s *service) Register(name, email, password string) (id int, err error) {

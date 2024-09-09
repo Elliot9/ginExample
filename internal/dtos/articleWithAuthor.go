@@ -1,6 +1,8 @@
 package dtos
 
-import "github/elliot9/ginExample/internal/models"
+import (
+	"github.com/elliot9/gin-example/internal/models"
+)
 
 type ArticleWithAuthor struct {
 	models.Article

@@ -2,9 +2,10 @@ package mail
 
 import (
 	"bytes"
-	"github/elliot9/ginExample/config"
 	"html/template"
 	"os"
+
+	"github.com/elliot9/gin-example/config"
 )
 
 func (s *service) Welcome(to, userName, verificationLink string) error {

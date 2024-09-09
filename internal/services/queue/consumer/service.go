@@ -4,9 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github/elliot9/ginExample/internal/repository/amqp"
-	"github/elliot9/ginExample/internal/services/mail"
-	"github/elliot9/ginExample/pkg/mailer"
+
+	"github.com/elliot9/gin-example/internal/repository/amqp"
+	"github.com/elliot9/gin-example/internal/services/mail"
+	"github.com/elliot9/gin-example/pkg/mailer"
 
 	"github.com/rabbitmq/amqp091-go"
 )

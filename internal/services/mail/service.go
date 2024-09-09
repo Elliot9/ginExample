@@ -1,6 +1,6 @@
 package mail
 
-import "github/elliot9/ginExample/pkg/mailer"
+import "github.com/elliot9/gin-example/pkg/mailer"
 
 type Service interface {
 	Welcome(to, userName, verificationLink string) error

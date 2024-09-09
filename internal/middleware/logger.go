@@ -1,8 +1,9 @@
 package middleware
 
 import (
-	"github/elliot9/ginExample/internal/pkg/context"
 	"time"
+
+	"github.com/elliot9/gin-example/internal/pkg/context"
 
 	"go.uber.org/zap"
 )

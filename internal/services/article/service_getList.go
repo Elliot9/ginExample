@@ -1,9 +1,9 @@
 package article
 
 import (
-	"github/elliot9/ginExample/internal/models"
-	"github/elliot9/ginExample/internal/pkg/paginator"
-	"github/elliot9/ginExample/internal/repository/article"
+	"github.com/elliot9/gin-example/internal/models"
+	"github.com/elliot9/gin-example/internal/pkg/paginator"
+	"github.com/elliot9/gin-example/internal/repository/article"
 )
 
 func (s *service) GetList(auth *models.Admin, page int, sortBy string, keyword string) (paginator.Paginator, error) {

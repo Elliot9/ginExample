@@ -1,8 +1,9 @@
 package health
 
 import (
-	"github/elliot9/ginExample/internal/pkg/context"
 	"time"
+
+	"github.com/elliot9/gin-example/internal/pkg/context"
 )
 
 func (h *handler) Ping() context.HandlerFunc {

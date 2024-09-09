@@ -1,7 +1,7 @@
 package router
 
 import (
-	"github/elliot9/ginExample/internal/middleware"
+	"github.com/elliot9/gin-example/internal/middleware"
 )
 
 type RouterMiddleware interface {

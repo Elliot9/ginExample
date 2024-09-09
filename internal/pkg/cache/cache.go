@@ -5,7 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/json"
 	"fmt"
-	redisRepo "github/elliot9/ginExample/internal/repository/redis"
+	redisRepo "github.com/elliot9/gin-example/internal/repository/redis"
 	"sort"
 	"strings"
 

@@ -1,7 +1,7 @@
 package admin
 
 import (
-	"github/elliot9/ginExample/internal/pkg/context"
+	"github.com/elliot9/gin-example/internal/pkg/context"
 
 	"github.com/gin-gonic/gin"
 )

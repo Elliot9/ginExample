@@ -1,7 +1,7 @@
 package article
 
 import (
-	"github/elliot9/ginExample/internal/models"
+	"github.com/elliot9/gin-example/internal/models"
 )
 
 func (s *service) FindById(auth *models.Admin, id int) (*models.Article, error) {

@@ -1,10 +1,11 @@
 package article
 
 import (
-	"github/elliot9/ginExample/internal/auth"
-	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
 	"time"
+
+	"github.com/elliot9/gin-example/internal/auth"
+	"github.com/elliot9/gin-example/internal/pkg/context"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

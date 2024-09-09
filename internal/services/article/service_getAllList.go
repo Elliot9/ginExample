@@ -1,8 +1,8 @@
 package article
 
 import (
-	"github/elliot9/ginExample/internal/pkg/paginator"
-	"github/elliot9/ginExample/internal/repository/article"
+	"github.com/elliot9/gin-example/internal/pkg/paginator"
+	"github.com/elliot9/gin-example/internal/repository/article"
 )
 
 func (s *service) GetAllList(page int, onlyActive bool) (paginator.Paginator, error) {

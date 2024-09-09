@@ -2,9 +2,10 @@ package admin
 
 import (
 	"fmt"
-	"github/elliot9/ginExample/internal/models"
-	"github/elliot9/ginExample/internal/pkg/context"
 	"net/http"
+
+	"github.com/elliot9/gin-example/internal/models"
+	"github.com/elliot9/gin-example/internal/pkg/context"
 
 	"github.com/go-playground/validator/v10"
 )
